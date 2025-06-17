@@ -1,8 +1,32 @@
+import org.gradle.kotlin.dsl.implementation
+import java.io.FileInputStream
+import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
+
+// Function to safely load properties from local.properties
+fun getApiKey(project: Project, propertyName: String): String {
+    val localPropertiesFile = project.rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        val properties = Properties()
+        FileInputStream(localPropertiesFile).use { fis ->
+            properties.load(fis)
+        }
+        // Return property value or an empty string if not found
+        // The quotes are expected to be part of the value in local.properties
+        return properties.getProperty(propertyName, "\"\"")
+    }
+    // Fallback for CI: Read from environment variable if local.properties doesn't exist or key missing
+    // Gradle automatically makes environment variables available as project properties
+    // Note: env var names often match property names, but can be different if mapped in CI
+    return project.findProperty(propertyName)?.toString() ?: "\"\"" // Default to empty string literal if not found anywhere
+}
+
 
 android {
     namespace = "com.eltonkola.dreamcraft"
@@ -16,6 +40,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val groqApiKey = getApiKey(project, "GROQ_API_KEY")
+        buildConfigField("String", "GROQ_API_KEY", "\"$groqApiKey\"")
+
     }
 
     buildTypes {
@@ -36,6 +64,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -52,6 +81,18 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
+    implementation( libs.androidx.datastore.preferences)
+
+    implementation (libs.okhttp)
+    implementation (libs.kotlinx.serialization.json)
+    implementation (libs.kotlinx.coroutines.android)
+
+
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+    ksp(libs.androidx.hilt.compiler)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,0 +1,52 @@
+package com.composables
+
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.path
+import androidx.compose.ui.unit.dp
+
+val FolderPlus: ImageVector
+    get() {
+        if (_FolderPlus != null) return _FolderPlus!!
+        
+        _FolderPlus = ImageVector.Builder(
+            name = "FolderPlus",
+            defaultWidth = 24.dp,
+            defaultHeight = 24.dp,
+            viewportWidth = 24f,
+            viewportHeight = 24f
+        ).apply {
+            path(
+                stroke = SolidColor(Color.Black),
+                strokeLineWidth = 2f,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round
+            ) {
+                moveTo(12f, 10f)
+                verticalLineToRelative(6f)
+                moveToRelative(-3f, -3f)
+                horizontalLineToRelative(6f)
+                moveToRelative(5f, 7f)
+                arcToRelative(2f, 2f, 0f, false, false, 2f, -2f)
+                verticalLineTo(8f)
+                arcToRelative(2f, 2f, 0f, false, false, -2f, -2f)
+                horizontalLineToRelative(-7.9f)
+                arcToRelative(2f, 2f, 0f, false, true, -1.69f, -0.9f)
+                lineTo(9.6f, 3.9f)
+                arcTo(2f, 2f, 0f, false, false, 7.93f, 3f)
+                horizontalLineTo(4f)
+                arcToRelative(2f, 2f, 0f, false, false, -2f, 2f)
+                verticalLineToRelative(13f)
+                arcToRelative(2f, 2f, 0f, false, false, 2f, 2f)
+                close()
+            }
+        }.build()
+        
+        return _FolderPlus!!
+    }
+
+private var _FolderPlus: ImageVector? = null
+

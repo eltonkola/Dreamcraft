@@ -13,15 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.eltonkola.dreamcraft.ui.MainApp
 import com.eltonkola.dreamcraft.ui.theme.DreamcraftTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            DreamcraftTheme {
-                MainApp()
-            }
+            MainApp()
         }
     }
 }

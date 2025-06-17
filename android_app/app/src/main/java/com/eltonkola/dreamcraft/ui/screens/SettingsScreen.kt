@@ -1,5 +1,6 @@
-package com.eltonkola.dreamcraft.ui
+package com.eltonkola.dreamcraft.ui.screens
 
+import android.os.Build
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,9 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,11 +26,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-
+import com.composables.Eye
+import com.composables.EyeOff
+import com.eltonkola.dreamcraft.ui.theme.getAvailableThemeOptions
 
 @Composable
-fun SettingsScreen() {
-    var selectedTheme by remember { mutableStateOf("System") }
+fun SettingsScreen(
+    updateSettings: (String) -> Unit,
+    selectedTheme: String
+) {
     var apiKey by remember { mutableStateOf("") }
     var showApiKey by remember { mutableStateOf(false) }
 
@@ -55,7 +57,8 @@ fun SettingsScreen() {
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
-        val themes = listOf("System", "Light", "Dark")
+        val themes = getAvailableThemeOptions()
+
         themes.forEach { theme ->
             Row (
                 modifier = Modifier
@@ -65,7 +68,7 @@ fun SettingsScreen() {
             ) {
                 RadioButton(
                     selected = selectedTheme == theme,
-                    onClick = { selectedTheme = theme }
+                    onClick = { updateSettings(theme) }
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(text = theme)
@@ -90,7 +93,7 @@ fun SettingsScreen() {
             trailingIcon = {
                 IconButton(onClick = { showApiKey = !showApiKey }) {
                     Icon(
-                        imageVector = if (showApiKey) Icons.Default.CheckCircle else Icons.Default.Close,
+                        imageVector = if (showApiKey) EyeOff else Eye,
                         contentDescription = if (showApiKey) "Hide API Key" else "Show API Key"
                     )
                 }

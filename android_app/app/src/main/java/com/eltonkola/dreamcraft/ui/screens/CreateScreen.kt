@@ -1,4 +1,4 @@
-package com.eltonkola.dreamcraft.ui
+package com.eltonkola.dreamcraft.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,10 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,6 +35,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.composables.ChevronRight
+import com.composables.Folder
+import com.composables.FolderPlus
+import com.eltonkola.dreamcraft.ui.screens.game.createProject
+import com.eltonkola.dreamcraft.ui.screens.game.loadProjects
 import kotlinx.coroutines.launch
 
 
@@ -111,7 +112,7 @@ fun CreateScreen(navController: NavHostController) {
                 onClick = { showDialog = true },
                 modifier = Modifier.size(56.dp)
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add Project")
+                Icon(FolderPlus, contentDescription = "Add Project")
             }
         }
 
@@ -147,7 +148,7 @@ fun CreateScreen(navController: NavHostController) {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                Icons.Default.List,
+                                Folder,
                                 contentDescription = null,
                                 modifier = Modifier.size(24.dp)
                             )
@@ -158,7 +159,7 @@ fun CreateScreen(navController: NavHostController) {
                             )
                             Spacer(modifier = Modifier.weight(1f))
                             Icon(
-                                Icons.Default.KeyboardArrowRight,
+                                ChevronRight,
                                 contentDescription = null
                             )
                         }
