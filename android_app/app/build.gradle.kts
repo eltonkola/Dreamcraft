@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.serialization)
 }
 
 // Function to safely load properties from local.properties
@@ -66,11 +67,12 @@ android {
         compose = true
         buildConfig = true
     }
+
 }
 
 dependencies {
 
-   // implementation("com.github.eltonkola:love-android:-SNAPSHOT")
+    implementation(mapOf("name" to "library-embed-record-release", "ext" to "aar"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -92,7 +94,7 @@ dependencies {
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
     ksp(libs.androidx.hilt.compiler)
-
+    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

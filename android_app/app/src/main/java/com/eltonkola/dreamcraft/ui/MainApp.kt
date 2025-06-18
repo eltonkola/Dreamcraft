@@ -25,6 +25,7 @@ import com.composables.Settings
 import com.eltonkola.dreamcraft.data.PreferencesManager
 import com.eltonkola.dreamcraft.ui.screens.CreateScreen
 import com.eltonkola.dreamcraft.ui.screens.ExploreScreen
+import com.eltonkola.dreamcraft.ui.screens.SettingsScreen
 import com.eltonkola.dreamcraft.ui.screens.game.GameScreen
 import com.eltonkola.dreamcraft.ui.theme.DreamcraftTheme
 

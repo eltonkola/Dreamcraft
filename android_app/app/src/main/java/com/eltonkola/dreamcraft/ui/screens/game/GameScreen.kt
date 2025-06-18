@@ -41,9 +41,11 @@ import androidx.lifecycle.viewModelScope
 import java.io.File
 import androidx.navigation.NavHostController
 import com.composables.ChevronLeft
+import com.composables.Play
 import com.composables.SendHorizontal
 import com.eltonkola.dreamcraft.data.GroqRepository
 import com.eltonkola.dreamcraft.data.hasStoragePermission
+import com.eltonkola.dreamcraft.data.startGame
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -63,7 +65,7 @@ sealed class UiState {
 @Composable
 fun GameScreen(projectName: String,
                navController: NavHostController,
-               viewModel: EditorViewModel = hiltViewModel()
+               viewModel: GameViewModel = hiltViewModel()
                ) {
     var message by remember { mutableStateOf("") }
     var messages by remember { mutableStateOf(listOf<ChatMessage>()) }
@@ -85,6 +87,13 @@ fun GameScreen(projectName: String,
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(ChevronLeft, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {
+                        context.startGame(projectName)
+                    }) {
+                        Icon(Play, contentDescription = "Chat")
                     }
                 }
             )
@@ -118,7 +127,7 @@ fun GameScreen(projectName: String,
             GenerateButton(
                 uiState = uiState,
                 onGenerateClick = {
-                    viewModel.generateeGame("classic snake game")
+                    viewModel.generateGame("classic snake game")
                 }
             )
 
@@ -193,35 +202,3 @@ data class ChatMessage(
 
 
 
-// File management functions
-suspend fun loadProjects(context: Context): List<String> {
-    return try {
-        val projectsDir = File(context.filesDir, "projects")
-        if (!projectsDir.exists()) {
-            projectsDir.mkdirs()
-        }
-        projectsDir.listFiles()?.filter { it.isDirectory }?.map { it.name } ?: emptyList()
-    } catch (e: Exception) {
-        emptyList()
-    }
-}
-
-suspend fun createProject(context: Context, projectName: String) {
-    try {
-        val projectsDir = File(context.filesDir, "projects")
-        if (!projectsDir.exists()) {
-            projectsDir.mkdirs()
-        }
-
-        val projectDir = File(projectsDir, projectName)
-        if (!projectDir.exists()) {
-            projectDir.mkdirs()
-
-            // Create main.lua file
-            val mainLuaFile = File(projectDir, "main.lua")
-            mainLuaFile.createNewFile()
-        }
-    } catch (e: Exception) {
-        // Handle error silently for now
-    }
-}

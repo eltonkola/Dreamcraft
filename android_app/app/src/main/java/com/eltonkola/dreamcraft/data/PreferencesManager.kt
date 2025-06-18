@@ -1,6 +1,7 @@
 package com.eltonkola.dreamcraft.data
 
 import android.content.Context
+import com.eltonkola.dreamcraft.BuildConfig
 
 class PreferencesManager(context: Context) {
     private val sharedPreferences = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
@@ -22,6 +23,6 @@ class PreferencesManager(context: Context) {
     }
 
     companion object {
-        const val DEFAULT_API_KEY = BuidConfig.GROQ_API_KEY
+        const val DEFAULT_API_KEY = BuildConfig.GROQ_API_KEY
     }
 }

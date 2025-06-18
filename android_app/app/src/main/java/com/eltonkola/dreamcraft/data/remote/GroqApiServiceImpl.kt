@@ -1,13 +1,18 @@
 package com.eltonkola.dreamcraft.data.remote
 
+import android.util.Log
 import com.eltonkola.dreamcraft.data.GroqApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 
 class GroqApiServiceImpl(
@@ -15,7 +20,13 @@ class GroqApiServiceImpl(
     private val apiKey: String
 ) : GroqApiService {
 
+
     private val apiUrl = "https://api.groq.com/openai/v1/chat/completions"
+    private val json = Json {
+        ignoreUnknownKeys = true
+        encodeDefaults = true
+    }
+
 
     override suspend fun generateGame(prompt: String): String = withContext(Dispatchers.IO) {
         val prompt = """
@@ -26,19 +37,19 @@ class GroqApiServiceImpl(
         """.trimIndent()
 
         val requestBody = GroqRequest(
-            model = "mixtral-8x7b-32768",
+            model = "deepseek-r1-distill-llama-70b",
             messages = listOf(
-                Message(role = "user", content = prompt)
+                GroqMessage(role = "user", content = prompt)
             ),
             maxTokens = 2048,
             temperature = 0.7
         )
 
-        val json = Json.encodeToString(requestBody)
-        val body = RequestBody.create(
-            "application/json".toMediaType(),
-            json
-        )
+        val jsonBody = json.encodeToString(requestBody)
+        Log.d("GroqAPI", "Request: $jsonBody")
+
+        val body = jsonBody
+            .toRequestBody("application/json; charset=utf-8".toMediaType())
 
         val request = Request.Builder()
             .url(apiUrl)
@@ -48,41 +59,71 @@ class GroqApiServiceImpl(
             .build()
 
         val response = client.newCall(request).execute()
+        val responseBodyString = response.body?.string() ?: ""
+
+        Log.d("GroqAPI", "Response code: ${response.code}")
+        Log.d("GroqAPI", "Response: $responseBodyString")
 
         if (!response.isSuccessful) {
-            throw IOException("API call failed: ${response.code}")
+            try {
+                val errorResponse = json.decodeFromString<GroqError>(responseBodyString)
+                throw IOException("Groq API Error: ${errorResponse.error.message}")
+            } catch (e: SerializationException) {
+                throw IOException("API call failed (${response.code}): $responseBodyString")
+            }
         }
 
-        val responseBody = response.body?.string()
-            ?: throw IOException("Empty response body")
+        try {
+            val groqResponse = json.decodeFromString<GroqResponse>(responseBodyString)
+            val content = groqResponse.choices.firstOrNull()?.message?.content
+                ?: throw IOException("No content in response")
 
-        val groqResponse = Json.decodeFromString<GroqResponse>(responseBody)
-        val luaCode = groqResponse.choices.firstOrNull()?.message?.content
-            ?: throw IOException("No content in response")
+            // Clean up markdown formatting
+            content.replace(Regex("```(?:lua)?\\n?"), "").trim()
 
-        // Clean up any potential markdown formatting
-        luaCode.replace(Regex("```(?:lua)?\\n?"), "").trim()
+        } catch (e: SerializationException) {
+            Log.e("GroqAPI", "Serialization error", e)
+            throw IOException("Failed to parse response: ${e.message}")
+        }
     }
 }
-
+@Serializable
 data class GroqRequest(
     val model: String,
-    val messages: List<Message>,
-    val maxTokens: Int,
-    val temperature: Double
+    val messages: List<GroqMessage>,
+    @SerialName("max_tokens") val maxTokens: Int,
+    val temperature: Double,
+    @SerialName("top_p") val topP: Double = 1.0,
+    val stream: Boolean = false
 )
 
-
-data class Message(
+@Serializable
+data class GroqMessage(
     val role: String,
     val content: String
 )
+
+@Serializable
 data class GroqResponse(
-    val choices: List<Choice>
+    val choices: List<GroqChoice>
 )
 
-data class Choice(
-    val message: Message
+@Serializable
+data class GroqChoice(
+    val message: GroqMessage,
+    @SerialName("finish_reason") val finishReason: String? = null
+)
+
+@Serializable
+data class GroqError(
+    val error: GroqErrorDetail
+)
+
+@Serializable
+data class GroqErrorDetail(
+    val message: String,
+    val type: String? = null,
+    val code: String? = null
 )
 
 

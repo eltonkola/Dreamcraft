@@ -36,10 +36,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.composables.ChevronRight
-import com.composables.Folder
 import com.composables.FolderPlus
-import com.eltonkola.dreamcraft.ui.screens.game.createProject
-import com.eltonkola.dreamcraft.ui.screens.game.loadProjects
+import com.composables.Gamepad2
+import com.eltonkola.dreamcraft.data.local.createProject
+import com.eltonkola.dreamcraft.data.local.loadProjects
 import kotlinx.coroutines.launch
 
 
@@ -148,7 +148,7 @@ fun CreateScreen(navController: NavHostController) {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                Folder,
+                                Gamepad2,
                                 contentDescription = null,
                                 modifier = Modifier.size(24.dp)
                             )

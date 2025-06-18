@@ -1,5 +1,6 @@
 package com.eltonkola.dreamcraft.ui.screens.game
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eltonkola.dreamcraft.data.GroqRepository
@@ -10,20 +11,22 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
-class EditorViewModel @Inject constructor(
+class GameViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val repository: GroqRepository
 ) : ViewModel() {
+
+    val projectName = savedStateHandle["projectName"] ?: ""
 
     private val _uiState = MutableStateFlow<UiState>(UiState.Idle)
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
-    fun generateeGame(promtp: String) {
+    fun generateGame(prompt: String) {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
 
-            repository.generateGame(promtp)
+            repository.generateGame(prompt, projectName)
                 .onSuccess { filePath ->
                     _uiState.value = UiState.Success(filePath)
                 }

@@ -10,12 +10,13 @@ class GroqRepositoryImpl(
     private val fileManager: FileManager
 ) : GroqRepository {
 
-    override suspend fun generateGame(prompt: String): Result<String> {
+    override suspend fun generateGame(prompt: String, projectName: String): Result<String> {
         return try {
             val luaCode = apiService.generateGame(prompt)
-            val filePath = fileManager.saveLuaFile(luaCode)
+            val filePath = fileManager.saveLuaFile(luaCode, projectName)
             Result.success(filePath)
         } catch (e: Exception) {
+            e.printStackTrace()
             Result.failure(e)
         }
     }
