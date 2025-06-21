@@ -7,6 +7,9 @@ import com.eltonkola.dreamcraft.data.FileManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class FileManagerImpl(private val context: Context) : FileManager {
 
@@ -64,14 +67,43 @@ suspend fun updateProjectFile(context: Context, projectName: String, content: St
     }
 }
 
+data class GapeProject(
+    val name: String,
+    val nrFiles: Int,
+    val createdAt: Date
+) {
+    fun timeAgo(): String {
+        val now = System.currentTimeMillis()
+        val diff = now - createdAt.time
+        val seconds = diff / 1000
+        val minutes = seconds / 60
+        val hours = minutes / 60
+        val days = hours / 24
+
+        return when {
+            seconds < 60 -> "just now"
+            minutes < 60 -> "$minutes min ago"
+            hours < 24 -> "$hours hr ago"
+            days < 7 -> "$days day${if (days > 1) "s" else ""} ago"
+            else -> SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(createdAt)
+        }
+    }
+}
+
 // File management functions
-suspend fun loadProjects(context: Context): List<String> {
+suspend fun loadProjects(context: Context): List<GapeProject> {
     return try {
         val projectsDir = File(context.filesDir, "projects")
         if (!projectsDir.exists()) {
             projectsDir.mkdirs()
         }
-        projectsDir.listFiles()?.filter { it.isDirectory }?.map { it.name } ?: emptyList()
+        projectsDir.listFiles()?.filter { it.isDirectory }
+            ?.map { dir ->
+                val nrFiles = dir.listFiles()?.size ?: 0
+                val createdAt = Date(dir.lastModified())
+                GapeProject(name = dir.name, nrFiles = nrFiles, createdAt = createdAt)
+            }?.sortedByDescending { it.createdAt }
+            ?: emptyList()
     } catch (e: Exception) {
         emptyList()
     }

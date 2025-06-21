@@ -38,6 +38,7 @@ import androidx.navigation.NavHostController
 import com.composables.ChevronRight
 import com.composables.FolderPlus
 import com.composables.Gamepad2
+import com.eltonkola.dreamcraft.data.local.GapeProject
 import com.eltonkola.dreamcraft.data.local.createProject
 import com.eltonkola.dreamcraft.data.local.loadProjects
 import kotlinx.coroutines.launch
@@ -45,9 +46,9 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateScreen(navController: NavHostController) {
+fun GameListScreen(navController: NavHostController) {
     val context = LocalContext.current
-    var projects by remember { mutableStateOf(listOf<String>()) }
+    var projects by remember { mutableStateOf(listOf<GapeProject>()) }
     var showDialog by remember { mutableStateOf(false) }
     var newProjectName by remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
@@ -134,46 +135,51 @@ fun CreateScreen(navController: NavHostController) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items (projects) { project ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        onClick = {
-                            navController.navigate("chat/$project")
-                        }
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                Gamepad2,
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Column {
-                                Text(
-                                    text = project,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                                Text(
-                                    text = "4 days ago",
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-
-
-                            Spacer(modifier = Modifier.weight(1f))
-                            Icon(
-                                ChevronRight,
-                                contentDescription = null
-                            )
-                        }
+                    ProjectCard(project = project) {
+                        navController.navigate("chat/${project.name}")
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun ProjectCard(project: GapeProject, onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(),
+        onClick = onClick
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                Gamepad2,
+                contentDescription = null,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Column {
+                Text(
+                    text = project.name,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Text(
+                    text = "Created ${project.timeAgo()} • ${project.nrFiles} file${if (project.nrFiles == 1) "" else "s"}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(
+                ChevronRight,
+                contentDescription = null
+            )
         }
     }
 }

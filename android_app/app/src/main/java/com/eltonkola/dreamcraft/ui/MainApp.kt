@@ -1,11 +1,13 @@
 package com.eltonkola.dreamcraft.ui
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,7 +25,7 @@ import com.composables.Gamepad2
 import com.composables.Globe
 import com.composables.Settings
 import com.eltonkola.dreamcraft.data.PreferencesManager
-import com.eltonkola.dreamcraft.ui.screens.CreateScreen
+import com.eltonkola.dreamcraft.ui.screens.GameListScreen
 import com.eltonkola.dreamcraft.ui.screens.ExploreScreen
 import com.eltonkola.dreamcraft.ui.screens.SettingsScreen
 import com.eltonkola.dreamcraft.ui.screens.game.GameScreen
@@ -48,61 +50,59 @@ fun MainApp() {
         preferencesManager.saveTheme(selectedTheme)
     }
 
-
-
     DreamcraftTheme(
         selectedTheme = selectedTheme
     ) {
+        Surface(modifier = Modifier.fillMaxSize()) {
 
-
-        Scaffold(
-            bottomBar = {
-                if (currentRoute != "chat/{projectName}") {
-                    NavigationBar {
-                        NavigationBarItem(
-                            icon = { Icon(Gamepad2, contentDescription = "Create") },
-                            label = { Text("Create") },
-                            selected = currentRoute == "create",
-                            onClick = { navController.navigate("create") }
-                        )
-                        NavigationBarItem(
-                            icon = { Icon(Globe, contentDescription = "Explore") },
-                            label = { Text("Explore") },
-                            selected = currentRoute == "explore",
-                            onClick = { navController.navigate("explore") }
-                        )
-                        NavigationBarItem(
-                            icon = { Icon(Settings, contentDescription = "Settings") },
-                            label = { Text("Settings") },
-                            selected = currentRoute == "settings",
-                            onClick = { navController.navigate("settings") }
+            Scaffold(
+                bottomBar = {
+                    if (currentRoute != "chat/{projectName}") {
+                        NavigationBar {
+                            NavigationBarItem(
+                                icon = { Icon(Gamepad2, contentDescription = "Create") },
+                                label = { Text("Create") },
+                                selected = currentRoute == "create",
+                                onClick = { navController.navigate("create") }
+                            )
+                            NavigationBarItem(
+                                icon = { Icon(Globe, contentDescription = "Explore") },
+                                label = { Text("Explore") },
+                                selected = currentRoute == "explore",
+                                onClick = { navController.navigate("explore") }
+                            )
+                            NavigationBarItem(
+                                icon = { Icon(Settings, contentDescription = "Settings") },
+                                label = { Text("Settings") },
+                                selected = currentRoute == "settings",
+                                onClick = { navController.navigate("settings") }
+                            )
+                        }
+                    }
+                },
+                topBar = {}
+            ) { paddingValues ->
+                NavHost(
+                    navController = navController,
+                    startDestination = "create",
+                    modifier = Modifier.padding(paddingValues)
+                ) {
+                    composable("create") { GameListScreen(navController) }
+                    composable("explore") { ExploreScreen() }
+                    composable("settings") {
+                        SettingsScreen(
+                            selectedTheme = selectedTheme,
+                            updateSettings = {
+                                selectedTheme = it
+                            }
                         )
                     }
-                }
-            },
-            topBar = {}
-        ) { paddingValues ->
-            NavHost(
-                navController = navController,
-                startDestination = "create",
-                modifier = Modifier.padding(paddingValues)
-            ) {
-                composable("create") { CreateScreen(navController) }
-                composable("explore") { ExploreScreen() }
-                composable("settings") {
-                    SettingsScreen(
-                        selectedTheme = selectedTheme,
-                        updateSettings = {
-                            selectedTheme = it
-                        }
-                    )
-                }
-                composable("chat/{projectName}") { backStackEntry ->
-                    val projectName = backStackEntry.arguments?.getString("projectName") ?: ""
-                    GameScreen(projectName, navController)
+                    composable("chat/{projectName}") { backStackEntry ->
+                        val projectName = backStackEntry.arguments?.getString("projectName") ?: ""
+                        GameScreen(projectName, navController)
+                    }
                 }
             }
         }
     }
-
 }
