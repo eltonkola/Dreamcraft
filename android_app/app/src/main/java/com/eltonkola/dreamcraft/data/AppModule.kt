@@ -3,6 +3,7 @@ package com.eltonkola.dreamcraft.data
 import android.content.Context
 import com.eltonkola.dreamcraft.BuildConfig
 import com.eltonkola.dreamcraft.data.local.FileManagerImpl
+import com.eltonkola.dreamcraft.data.remote.FakeLocalRepositoryImpl
 import com.eltonkola.dreamcraft.data.remote.GroqApiServiceImpl
 import com.eltonkola.dreamcraft.data.remote.GroqRepositoryImpl
 import dagger.Module
@@ -52,7 +53,11 @@ object AppModule {
         apiService: GroqApiService,
         fileManager: FileManager
     ): GroqRepository {
+
+
         return GroqRepositoryImpl(apiService, fileManager)
+
+       // return FakeLocalRepositoryImpl(fileManager)
     }
 }
 

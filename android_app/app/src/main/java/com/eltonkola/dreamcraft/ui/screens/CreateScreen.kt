@@ -153,10 +153,18 @@ fun CreateScreen(navController: NavHostController) {
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(12.dp))
-                            Text(
-                                text = project,
-                                style = MaterialTheme.typography.titleMedium
-                            )
+                            Column {
+                                Text(
+                                    text = project,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Text(
+                                    text = "4 days ago",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+
+
                             Spacer(modifier = Modifier.weight(1f))
                             Icon(
                                 ChevronRight,

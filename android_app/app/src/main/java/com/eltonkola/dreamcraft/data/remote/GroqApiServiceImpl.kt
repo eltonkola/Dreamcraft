@@ -30,12 +30,18 @@ class GroqApiServiceImpl(
 
     override suspend fun generateGame(prompt: String): String = withContext(Dispatchers.IO) {
         val prompt = """
-            Create a complete Love2D (LÖVE) game in Lua.
-            Game specifications: $prompt.
-            Make it a fully playable game with arrow key controls.
-            Provide only the Lua code without any explanations or markdown formatting.
-        """.trimIndent()
+You are a Lua code generator.
+Your task is to create a complete, playable Love2D (LÖVE) game in Lua.
 
+Requirements:
+- The game must be fully playable.
+- It must use arrow key controls.
+- It must be a single Lua source file with the complete code.
+- Do not include any explanation, comments, or markdown.
+- Output only plain Lua source code. Do not include ``` or any descriptive text.
+
+Game idea: $prompt
+""".trimIndent()
         val requestBody = GroqRequest(
             model = "deepseek-r1-distill-llama-70b",
             messages = listOf(

@@ -1,5 +1,7 @@
 package com.eltonkola.dreamcraft.ui.screens.game
 
+import android.R.attr.contentDescription
+import android.R.id.message
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,49 +15,79 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.composables.CircleCheck
 import com.composables.CircleX
+import com.composables.SendHorizontal
 import com.composables.TriangleAlert
+import kotlin.collections.plus
 
 
 @Composable
 internal fun GenerateButton(
     uiState: UiState,
-    onGenerateClick: () -> Unit
+    onGenerateClick: (String) -> Unit
 ) {
-    Button(
-        onClick = onGenerateClick,
-        enabled = uiState !is UiState.Loading,
+
+    var message by remember { mutableStateOf("") }
+
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp)
+            .padding(16.dp),
+        verticalAlignment = Alignment.Bottom
     ) {
-        if (uiState is UiState.Loading) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(20.dp),
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-        }
-
-        Text(
-            text = when (uiState) {
-                is UiState.Loading -> "Generating..."
-                else -> "Generate Game"
-            },
-            style = MaterialTheme.typography.titleMedium
+        OutlinedTextField(
+            value = message,
+            onValueChange = { message = it },
+            placeholder = { Text("Type a message...") },
+            modifier = Modifier.weight(1f),
+            maxLines = 4
         )
+        Spacer(modifier = Modifier.width(8.dp))
+        IconButton (
+            enabled = uiState !is UiState.Loading,
+            onClick = {
+                if (message.isNotBlank()) {
+                    onGenerateClick(message)
+                    message = ""
+                }
+            },
+            modifier = Modifier.size(48.dp)
+        ) {
+            if (uiState is UiState.Loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }else{
+                Icon(SendHorizontal, contentDescription  = "Send")
+            }
+
+            //   text = when (uiState) {
+            //                is UiState.Loading -> "Generating..."
+            //                else -> "Generate Game"
+            //            },
+
+        }
     }
+
 }
 
 @Composable
@@ -79,7 +111,7 @@ internal fun StatusCard(
             when (uiState) {
                 is UiState.Idle -> {
                     Text(
-                        text = "Ready to generate your Love2D snake game",
+                        text = "Ready to generate your Love2D game",
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center
                     )
@@ -94,7 +126,7 @@ internal fun StatusCard(
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = "Calling Groq API to generate snake game...",
+                            text = "Calling Groq API to generate game...",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }
@@ -108,7 +140,7 @@ internal fun StatusCard(
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     Text(
-                        text = "Snake game generated successfully!",
+                        text = "Snake generated successfully!",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier.padding(bottom = 4.dp)

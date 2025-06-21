@@ -79,7 +79,8 @@ fun MainApp() {
                         )
                     }
                 }
-            }
+            },
+            topBar = {}
         ) { paddingValues ->
             NavHost(
                 navController = navController,

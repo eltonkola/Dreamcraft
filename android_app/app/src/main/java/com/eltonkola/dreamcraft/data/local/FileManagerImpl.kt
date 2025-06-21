@@ -2,6 +2,7 @@ package com.eltonkola.dreamcraft.data.local
 
 import android.content.Context
 import android.os.Environment
+import android.util.Log
 import com.eltonkola.dreamcraft.data.FileManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -22,15 +23,17 @@ suspend fun createProject(context: Context, projectName: String) {
         if (!projectsDir.exists()) {
             projectsDir.mkdirs()
         }
+        Log.d("FileManager", "Projects dir: ${projectsDir.absolutePath}")
 
         val projectDir = File(projectsDir, projectName)
         if (!projectDir.exists()) {
             projectDir.mkdirs()
-
-            // Create main.lua file
-            val mainLuaFile = File(projectDir, "main.lua")
-            mainLuaFile.createNewFile()
         }
+        Log.d("FileManager", "Project dir: ${projectDir.absolutePath}")
+
+        val mainLuaFile = File(projectDir, "main.lua")
+        mainLuaFile.createNewFile()
+        Log.d("FileManager", "Project file: ${mainLuaFile.absolutePath} - ${mainLuaFile.exists()}")
     } catch (e: Exception) {
         // Handle error silently for now
         e.printStackTrace()
@@ -43,16 +46,17 @@ suspend fun updateProjectFile(context: Context, projectName: String, content: St
         if (!projectsDir.exists()) {
             projectsDir.mkdirs()
         }
-
+        Log.d("FileManager", "Projects dir: ${projectsDir.absolutePath} - ${projectsDir.exists()} -  IsDirectory: ${projectsDir.isDirectory} ")
         val projectDir = File(projectsDir, projectName)
         if (!projectDir.exists()) {
             projectDir.mkdirs()
         }
-
+        Log.d("FileManager", "Project dir: ${projectDir.absolutePath} - ${projectDir.exists()} -  IsDirectory: ${projectDir.isDirectory} ")
         val mainLuaFile = File(projectDir, "main.lua")
         mainLuaFile.writeText(content)
-        mainLuaFile.absolutePath
+        Log.d("FileManager", "Project file: ${mainLuaFile.absolutePath} - ${mainLuaFile.exists()} -  IsDirectory: ${mainLuaFile.isDirectory} ")
 
+        mainLuaFile.absolutePath
     } catch (e: Exception) {
         // Handle error silently for now
         e.printStackTrace()

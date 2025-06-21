@@ -1,6 +1,6 @@
 package com.eltonkola.dreamcraft.ui.screens.game
 
-import android.content.Context
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,25 +33,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import java.io.File
 import androidx.navigation.NavHostController
 import com.composables.ChevronLeft
 import com.composables.Play
-import com.composables.SendHorizontal
-import com.eltonkola.dreamcraft.data.GroqRepository
 import com.eltonkola.dreamcraft.data.hasStoragePermission
 import com.eltonkola.dreamcraft.data.startGame
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 sealed class UiState {
     object Idle : UiState()
@@ -67,18 +57,13 @@ fun GameScreen(projectName: String,
                navController: NavHostController,
                viewModel: GameViewModel = hiltViewModel()
                ) {
-    var message by remember { mutableStateOf("") }
-    var messages by remember { mutableStateOf(listOf<ChatMessage>()) }
+
 
     val uiState by viewModel.uiState.collectAsState()
-    val context = LocalContext.current
+    val messages by viewModel.messages.collectAsState()
 
-    LaunchedEffect(Unit) {
-        // Request permission on screen load if needed
-        if (!hasStoragePermission(context)) {
-            // Handle permission request - you might want to use accompanist-permissions
-        }
-    }
+
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -101,8 +86,8 @@ fun GameScreen(projectName: String,
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(paddingValues)
+                .fillMaxSize(),
         ) {
 
             StatusCard(
@@ -127,38 +112,9 @@ fun GameScreen(projectName: String,
             GenerateButton(
                 uiState = uiState,
                 onGenerateClick = {
-                    viewModel.generateGame("classic snake game")
+                    viewModel.generateGame(it)
                 }
             )
-
-
-            // Input area
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.Bottom
-            ) {
-                OutlinedTextField(
-                    value = message,
-                    onValueChange = { message = it },
-                    placeholder = { Text("Type a message...") },
-                    modifier = Modifier.weight(1f),
-                    maxLines = 4
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                FloatingActionButton(
-                    onClick = {
-                        if (message.isNotBlank()) {
-                            messages = messages + ChatMessage(message, true)
-                            message = ""
-                        }
-                    },
-                    modifier = Modifier.size(48.dp)
-                ) {
-                    Icon(SendHorizontal, contentDescription = "Send")
-                }
-            }
         }
     }
 }
