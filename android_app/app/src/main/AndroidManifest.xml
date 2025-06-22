@@ -28,6 +28,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="org.love2d.android.GameActivity"
+            android:launchMode="singleInstance"
+            android:taskAffinity="com.eltonkola.dreamcraft.game"
+            tools:replace="android:launchMode,android:taskAffinity"
+            />
 
     </application>
 

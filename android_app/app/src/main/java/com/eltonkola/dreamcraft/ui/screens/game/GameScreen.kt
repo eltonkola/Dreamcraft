@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,8 +41,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.composables.ChevronLeft
 import com.composables.Play
+import com.composables.SquarePen
 import com.eltonkola.dreamcraft.data.hasStoragePermission
 import com.eltonkola.dreamcraft.data.startGame
+import kotlin.collections.reversed
 
 sealed class UiState {
     object Idle : UiState()
@@ -76,9 +79,15 @@ fun GameScreen(projectName: String,
                 },
                 actions = {
                     IconButton(onClick = {
+                        navController.navigate("editor/${projectName}")
+                    }) {
+                        Icon(SquarePen, contentDescription = "Edit")
+                    }
+
+                    IconButton(onClick = {
                         context.startGame(projectName)
                     }) {
-                        Icon(Play, contentDescription = "Chat")
+                        Icon(Play, contentDescription = "Play")
                     }
                 }
             )

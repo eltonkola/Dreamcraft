@@ -136,7 +136,7 @@ fun GameListScreen(navController: NavHostController) {
             ) {
                 items (projects) { project ->
                     ProjectCard(project = project) {
-                        navController.navigate("chat/${project.name}")
+                        navController.navigate("game/${project.name}")
                     }
                 }
             }

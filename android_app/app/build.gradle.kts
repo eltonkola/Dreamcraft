@@ -90,6 +90,9 @@ dependencies {
     implementation (libs.kotlinx.coroutines.android)
 
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.coil.compose)
+
+    implementation(libs.qawaz.compose.code.editor)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

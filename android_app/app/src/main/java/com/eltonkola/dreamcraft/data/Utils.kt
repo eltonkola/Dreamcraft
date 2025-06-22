@@ -29,8 +29,10 @@ fun Context.startGame(projectName: String) {
     val file = File(projectsDir, projectName)
 
     val gameFile = createLoveFileInFilesDir(this, file.absolutePath, "${projectName}.love")
-    val intent = Intent(this, GameActivity::class.java)
-    intent.data = Uri.fromFile(gameFile)
+    val intent = Intent(this, GameActivity::class.java).apply {
+        data = Uri.fromFile(gameFile)
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+    }
     startActivity(intent)
 }
 

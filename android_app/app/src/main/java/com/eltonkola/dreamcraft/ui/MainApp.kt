@@ -29,6 +29,7 @@ import com.eltonkola.dreamcraft.ui.screens.GameListScreen
 import com.eltonkola.dreamcraft.ui.screens.ExploreScreen
 import com.eltonkola.dreamcraft.ui.screens.SettingsScreen
 import com.eltonkola.dreamcraft.ui.screens.game.GameScreen
+import com.eltonkola.dreamcraft.ui.screens.game.editor.FileManagerApp
 import com.eltonkola.dreamcraft.ui.theme.DreamcraftTheme
 
 
@@ -57,7 +58,7 @@ fun MainApp() {
 
             Scaffold(
                 bottomBar = {
-                    if (currentRoute != "chat/{projectName}") {
+                    if (currentRoute == "create" || currentRoute == "explore" || currentRoute == "settings") {
                         NavigationBar {
                             NavigationBarItem(
                                 icon = { Icon(Gamepad2, contentDescription = "Create") },
@@ -97,10 +98,16 @@ fun MainApp() {
                             }
                         )
                     }
-                    composable("chat/{projectName}") { backStackEntry ->
+                    composable("game/{projectName}") { backStackEntry ->
                         val projectName = backStackEntry.arguments?.getString("projectName") ?: ""
                         GameScreen(projectName, navController)
                     }
+                    composable("editor/{projectName}") { backStackEntry ->
+                        val projectName = backStackEntry.arguments?.getString("projectName") ?: ""
+                        FileManagerApp(projectName, navController)
+                    }
+
+
                 }
             }
         }

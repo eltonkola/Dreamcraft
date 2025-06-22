@@ -19,6 +19,7 @@ dependencyResolutionManagement {
         flatDir {
             dirs("app/libs") // or whatever path you put the AAR in
         }
+        maven { url = uri("https://jitpack.io") }
     }
 
 }
