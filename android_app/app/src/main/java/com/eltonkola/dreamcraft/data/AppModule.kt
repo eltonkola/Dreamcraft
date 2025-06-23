@@ -6,6 +6,8 @@ import com.eltonkola.dreamcraft.data.local.FileManagerImpl
 import com.eltonkola.dreamcraft.data.remote.FakeLocalRepositoryImpl
 import com.eltonkola.dreamcraft.data.remote.GroqApiServiceImpl
 import com.eltonkola.dreamcraft.data.remote.GroqRepositoryImpl
+import com.eltonkola.dreamcraft.remote.RemoteTaskFileSource
+import com.eltonkola.dreamcraft.remote.StaticRemoteSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -58,6 +60,13 @@ object AppModule {
         return GroqRepositoryImpl(apiService, fileManager)
 
        // return FakeLocalRepositoryImpl(fileManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRemoteTaskFileSource(
+    ): RemoteTaskFileSource {
+        return StaticRemoteSource()
     }
 }
 

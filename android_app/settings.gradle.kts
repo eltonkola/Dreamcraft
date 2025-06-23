@@ -26,3 +26,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Dreamcraft"
 include(":app")
+include(":core")
+include(":local")
+include(":remote")

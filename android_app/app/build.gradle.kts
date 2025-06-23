@@ -95,6 +95,9 @@ dependencies {
     implementation(libs.qawaz.compose.code.editor)
 
     implementation(libs.hilt.android)
+    implementation(project(":core"))
+    implementation(project(":local"))
+    implementation(project(":remote"))
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
     ksp(libs.androidx.hilt.compiler)
