@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -61,6 +62,7 @@ fun GameScreen(projectName: String,
         topBar = {
             TopAppBar(
                 title = { Text(projectName) },
+                windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp), // Added this line
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(ChevronLeft, contentDescription = "Back")
@@ -160,6 +162,3 @@ data class ChatMessage(
     val text: String,
     val isUser: Boolean
 )
-
-
-
