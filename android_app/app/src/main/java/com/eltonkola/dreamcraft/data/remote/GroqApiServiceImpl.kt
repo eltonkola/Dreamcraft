@@ -1,6 +1,7 @@
 package com.eltonkola.dreamcraft.data.remote
 
 import android.util.Log
+import com.eltonkola.dreamcraft.data.AiResponse
 import com.eltonkola.dreamcraft.data.GroqApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -14,6 +15,7 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
+import kotlin.String
 
 class GroqApiServiceImpl(
     private val client: OkHttpClient,
@@ -28,7 +30,7 @@ class GroqApiServiceImpl(
     }
 
 
-    override suspend fun generateGame(prompt: String): String = withContext(Dispatchers.IO) {
+    override suspend fun generateGame(prompt: String): AiResponse = withContext(Dispatchers.IO) {
         val prompt = """
 You are a Lua code generator.
 Your task is to create a complete, playable Love2D (LÖVE) game in Lua.
@@ -85,7 +87,9 @@ Game idea: $prompt
                 ?: throw IOException("No content in response")
 
             // Clean up markdown formatting
-            content.replace(Regex("```(?:lua)?\\n?"), "").trim()
+            val text = content.replace(Regex("```(?:lua)?\\n?"), "").trim()
+
+            text.toAiResponse()
 
         } catch (e: SerializationException) {
             Log.e("GroqAPI", "Serialization error", e)
@@ -93,6 +97,28 @@ Game idea: $prompt
         }
     }
 }
+
+fun String.toAiResponse() : AiResponse{
+
+    val regex = Regex("""<think>(.*?)</think>(.*)""", setOf(RegexOption.DOT_MATCHES_ALL, RegexOption.IGNORE_CASE))
+    val matchResult = regex.find(this.trim()) // Trim the input first
+
+    return if (matchResult != null && matchResult.groupValues.size == 3) {
+        val thoughtContent = matchResult.groupValues[1].trim()
+        val codeContent = matchResult.groupValues[2].trim()
+        AiResponse(
+            thought = thoughtContent.ifEmpty { null },
+            code = codeContent
+        )
+    } else {
+        // If the pattern doesn't match (e.g., no <think> tags),
+        // assume the entire response is code.
+        AiResponse(thought = null, code = this.trim())
+    }
+
+}
+
+
 @Serializable
 data class GroqRequest(
     val model: String,

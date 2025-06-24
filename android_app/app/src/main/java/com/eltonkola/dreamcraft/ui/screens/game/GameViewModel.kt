@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eltonkola.dreamcraft.data.GroqRepository
+import com.eltonkola.dreamcraft.ui.screens.game.editor.FileItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,13 +30,13 @@ class GameViewModel @Inject constructor(
 
 
 
-    fun generateGame(prompt: String) {
+    fun generateGame(prompt: String, file: FileItem?) {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
 
             _messages.update { it + ChatMessage(prompt, true) }
 
-            repository.generateGame(prompt, projectName)
+            repository.generateGame(prompt, projectName, file)
                 .onSuccess { filePath ->
                     _uiState.value = UiState.Success(filePath)
 

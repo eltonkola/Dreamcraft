@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -100,7 +102,9 @@ internal fun StatusCard(
         )
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
         ) {
             when (uiState) {
                 is UiState.Idle -> {
@@ -134,7 +138,7 @@ internal fun StatusCard(
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     Text(
-                        text = "Snake generated successfully!",
+                        text = "Game generated successfully!",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier.padding(bottom = 4.dp)

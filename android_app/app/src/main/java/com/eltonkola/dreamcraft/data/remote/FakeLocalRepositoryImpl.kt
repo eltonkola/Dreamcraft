@@ -2,17 +2,19 @@ package com.eltonkola.dreamcraft.data.remote
 
 import com.eltonkola.dreamcraft.data.FileManager
 import com.eltonkola.dreamcraft.data.GroqRepository
+import com.eltonkola.dreamcraft.ui.screens.game.editor.FileItem
 
 
 class FakeLocalRepositoryImpl(
     private val fileManager: FileManager
 ) : GroqRepository {
 
-    override suspend fun generateGame(prompt: String, projectName: String): Result<String> {
+    override suspend fun generateGame(prompt: String, projectName: String, file: FileItem?): Result<String> {
         return try {
             val luaCode = FAKE_GAME.trimIndent()
 
-            val filePath = fileManager.saveLuaFile(luaCode, projectName)
+            val filePath = fileManager.saveLuaFile(luaCode, projectName, file)
+
             Result.success(filePath)
         } catch (e: Exception) {
             e.printStackTrace()

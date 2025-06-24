@@ -75,7 +75,7 @@ fun GameListScreen(navController: NavHostController) {
                     onClick = {
                         if (newProjectName.isNotBlank()) {
                             scope.launch {
-                                createProject(context, newProjectName)
+                                createProject(context, newProjectName, null)
                                 projects = loadProjects(context)
                                 newProjectName = ""
                                 showDialog = false

@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Environment
 import android.util.Log
 import com.eltonkola.dreamcraft.data.FileManager
+import com.eltonkola.dreamcraft.ui.screens.game.editor.FileItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -13,14 +14,14 @@ import java.util.Locale
 
 class FileManagerImpl(private val context: Context) : FileManager {
 
-    override suspend fun saveLuaFile(content: String, projectName: String): String = withContext(Dispatchers.IO) {
-        val updatedPAth = updateProjectFile(context, projectName, content)
+    override suspend fun saveLuaFile(content: String, projectName: String, file: FileItem?): String = withContext(Dispatchers.IO) {
+        val updatedPAth = updateProjectFile(context, projectName, content, file)
         updatedPAth ?: ""
     }
 }
 
 
-suspend fun createProject(context: Context, projectName: String) {
+suspend fun createProject(context: Context, projectName: String, file: FileItem?) {
     try {
         val projectsDir = File(context.filesDir, "projects")
         if (!projectsDir.exists()) {
@@ -34,7 +35,7 @@ suspend fun createProject(context: Context, projectName: String) {
         }
         Log.d("FileManager", "Project dir: ${projectDir.absolutePath}")
 
-        val mainLuaFile = File(projectDir, "main.lua")
+        val mainLuaFile = File(projectDir, file?.name ?: "main.lua")
         mainLuaFile.createNewFile()
         Log.d("FileManager", "Project file: ${mainLuaFile.absolutePath} - ${mainLuaFile.exists()}")
     } catch (e: Exception) {
@@ -43,7 +44,7 @@ suspend fun createProject(context: Context, projectName: String) {
     }
 }
 
-suspend fun updateProjectFile(context: Context, projectName: String, content: String) : String? {
+suspend fun updateProjectFile(context: Context, projectName: String, content: String, file: FileItem?) : String? {
     return try {
         val projectsDir = File(context.filesDir, "projects")
         if (!projectsDir.exists()) {
@@ -55,7 +56,7 @@ suspend fun updateProjectFile(context: Context, projectName: String, content: St
             projectDir.mkdirs()
         }
         Log.d("FileManager", "Project dir: ${projectDir.absolutePath} - ${projectDir.exists()} -  IsDirectory: ${projectDir.isDirectory} ")
-        val mainLuaFile = File(projectDir, "main.lua")
+        val mainLuaFile = File(projectDir, file?.name ?: "main.lua")
         mainLuaFile.writeText(content)
         Log.d("FileManager", "Project file: ${mainLuaFile.absolutePath} - ${mainLuaFile.exists()} -  IsDirectory: ${mainLuaFile.isDirectory} ")
 
