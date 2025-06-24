@@ -20,6 +20,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
@@ -28,7 +30,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -36,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.composables.Trash2
 import com.eltonkola.dreamcraft.remote.data.AiIntegration
 import kotlinx.coroutines.launch
 import java.io.File
@@ -101,6 +107,10 @@ private fun LocalModelManagerContent(
     val context = LocalContext.current
     val internalFilesDir = context.filesDir
     val scope = rememberCoroutineScope()
+
+    var fileToDelete by remember { mutableStateOf<File?>(null) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
 
     val filePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
@@ -200,10 +210,13 @@ private fun LocalModelManagerContent(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Column {
+                        Column(
+                            modifier = Modifier.weight(1f)
+                        ) {
                             Text(
                                 text = "💾 ${file.nameWithoutExtension}",
                                 style = MaterialTheme.typography.bodyMedium,
+                                maxLines = 3,
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
@@ -223,9 +236,72 @@ private fun LocalModelManagerContent(
                                 )
                             }
                         )
+
+                        IconButton(
+                            enabled = !isSelected,
+                            onClick = {
+                                fileToDelete = file
+                                showDeleteDialog = true
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Trash2,
+                                contentDescription = "Delete model",
+                                tint = MaterialTheme.colorScheme.error
+                            )
+                        }
                     }
                 }
             }
+
+
+            // Delete confirmation dialog
+            if (showDeleteDialog && fileToDelete != null) {
+                AlertDialog(
+                    onDismissRequest = {
+                        showDeleteDialog = false
+                        fileToDelete = null
+                    },
+                    title = {
+                        Text("Delete Model")
+                    },
+                    text = {
+                        Text("Are you sure you want to delete \"${fileToDelete?.nameWithoutExtension}\"? This action cannot be undone.")
+                    },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                fileToDelete?.let { file ->
+                                    viewModel.deleteLocalFile(file)
+                                    // If the deleted file was the active AI, switch back to GROQ
+                                    if (currentActiveAi is AiIntegration.LOCAL &&
+                                        currentActiveAi.llmPath == file.absolutePath) {
+                                        onAiSelected(AiIntegration.GROQ())
+                                    }
+                                }
+                                showDeleteDialog = false
+                                fileToDelete = null
+                            }
+                        ) {
+                            Text(
+                                "Delete",
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = {
+                                showDeleteDialog = false
+                                fileToDelete = null
+                            }
+                        ) {
+                            Text("Cancel")
+                        }
+                    }
+                )
+            }
+
         }
 
         Spacer(Modifier.height(16.dp))
