@@ -1,15 +1,16 @@
 package com.eltonkola.dreamcraft.data.remote
 
 import com.eltonkola.dreamcraft.data.FileManager
-import com.eltonkola.dreamcraft.data.GroqRepository
+import com.eltonkola.dreamcraft.data.AiRepository
+import com.eltonkola.dreamcraft.remote.AiIntegration
 import com.eltonkola.dreamcraft.ui.screens.game.editor.FileItem
 
 
 class FakeLocalRepositoryImpl(
     private val fileManager: FileManager
-) : GroqRepository {
+) : AiRepository {
 
-    override suspend fun generateGame(prompt: String, projectName: String, file: FileItem?): Result<String> {
+    override suspend fun generateGame( integration: AiIntegration, prompt: String, projectName: String, file: FileItem?): Result<String> {
         return try {
             val luaCode = FAKE_GAME.trimIndent()
 
@@ -21,6 +22,8 @@ class FakeLocalRepositoryImpl(
             Result.failure(e)
         }
     }
+
+
     companion object {
 
         const val FAKE_GAME = """

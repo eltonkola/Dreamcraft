@@ -3,9 +3,9 @@ package com.eltonkola.dreamcraft.data
 import android.content.Context
 import com.eltonkola.dreamcraft.BuildConfig
 import com.eltonkola.dreamcraft.data.local.FileManagerImpl
-import com.eltonkola.dreamcraft.data.remote.FakeLocalRepositoryImpl
-import com.eltonkola.dreamcraft.data.remote.GroqApiServiceImpl
-import com.eltonkola.dreamcraft.data.remote.GroqRepositoryImpl
+import com.eltonkola.dreamcraft.data.remote.GroqApiService
+import com.eltonkola.dreamcraft.data.remote.AiRepositoryImpl
+import com.eltonkola.dreamcraft.remote.AiApiService
 import com.eltonkola.dreamcraft.remote.RemoteTaskFileSource
 import com.eltonkola.dreamcraft.remote.StaticRemoteSource
 import dagger.Module
@@ -34,8 +34,8 @@ object AppModule {
     @Singleton
     fun provideGroqApiService(
         client: OkHttpClient
-    ): GroqApiService {
-        return GroqApiServiceImpl(
+    ): AiApiService {
+        return GroqApiService(
             client = client,
             apiKey = BuildConfig.GROQ_API_KEY //TODO - check if PreferencesManager is using custom key
         )
@@ -52,12 +52,13 @@ object AppModule {
     @Provides
     @Singleton
     fun provideGroqRepository(
-        apiService: GroqApiService,
-        fileManager: FileManager
-    ): GroqRepository {
+        apiService: AiApiService,
+        fileManager: FileManager,
+        @ApplicationContext context: Context
+    ): AiRepository {
 
 
-        return GroqRepositoryImpl(apiService, fileManager)
+        return AiRepositoryImpl(apiService, fileManager, context)
 
        // return FakeLocalRepositoryImpl(fileManager)
     }

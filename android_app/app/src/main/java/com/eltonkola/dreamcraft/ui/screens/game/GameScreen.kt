@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
@@ -44,6 +46,7 @@ import com.composables.Container
 import com.composables.Play
 import com.composables.SquarePen
 import com.eltonkola.dreamcraft.data.startGame
+import com.eltonkola.dreamcraft.remote.LocalModelManagerDialog
 import com.eltonkola.dreamcraft.ui.screens.game.editor.FileItem
 import com.eltonkola.dreamcraft.ui.screens.game.editor.scanFilesFromPath
 import kotlin.collections.reversed
@@ -67,6 +70,9 @@ fun GameScreen(projectName: String,
     val uiState by viewModel.uiState.collectAsState()
     val messages by viewModel.messages.collectAsState()
 
+    val activeAi by viewModel.activeAi.collectAsState()
+
+    var showAiModelDialog by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
 
@@ -91,10 +97,14 @@ fun GameScreen(projectName: String,
                 },
                 actions = {
 
-                    IconButton(onClick = {
-                        navController.navigate("localModels")
+                    Button(onClick = {
+                        showAiModelDialog = true
                     }) {
-                        Icon(Container, contentDescription = "Local Models")
+                        Row {
+                            Icon(Container, contentDescription = "Local Models")
+                            Spacer(modifier = Modifier.size(8.dp))
+                            Text(activeAi.shortName())
+                        }
                     }
 
                     IconButton(onClick = {
@@ -130,6 +140,7 @@ fun GameScreen(projectName: String,
             }
 
             StatusCard(
+                activeAi = activeAi,
                 uiState = uiState,
                 onDismissError = viewModel::resetState,
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
@@ -183,6 +194,18 @@ fun GameScreen(projectName: String,
                 }
             )
         }
+
+
+        LocalModelManagerDialog(
+            showDialog = showAiModelDialog,
+            onDismiss = { showAiModelDialog = false },
+            currentActiveAi = activeAi,
+            onAiSelected = { selectedAi ->
+                viewModel.setActiveAi(selectedAi)
+                showAiModelDialog = false
+            }
+        )
+
     }
 }
 

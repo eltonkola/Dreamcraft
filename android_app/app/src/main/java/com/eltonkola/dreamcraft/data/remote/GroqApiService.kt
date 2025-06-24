@@ -1,8 +1,9 @@
 package com.eltonkola.dreamcraft.data.remote
 
 import android.util.Log
-import com.eltonkola.dreamcraft.data.AiResponse
-import com.eltonkola.dreamcraft.data.GroqApiService
+import com.eltonkola.dreamcraft.remote.AiApiService
+import com.eltonkola.dreamcraft.remote.AiResponse
+import com.eltonkola.dreamcraft.remote.toAiResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
@@ -12,15 +13,14 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 import kotlin.String
 
-class GroqApiServiceImpl(
+class GroqApiService(
     private val client: OkHttpClient,
     private val apiKey: String
-) : GroqApiService {
+) : AiApiService {
 
 
     private val apiUrl = "https://api.groq.com/openai/v1/chat/completions"
@@ -31,7 +31,7 @@ class GroqApiServiceImpl(
 
 
     override suspend fun generateGame(prompt: String): AiResponse = withContext(Dispatchers.IO) {
-        val prompt = """
+        val promptCopy = """
 You are a Lua code generator.
 Your task is to create a complete, playable Love2D (LÖVE) game in Lua.
 
@@ -47,7 +47,7 @@ Game idea: $prompt
         val requestBody = GroqRequest(
             model = "deepseek-r1-distill-llama-70b",
             messages = listOf(
-                GroqMessage(role = "user", content = prompt)
+                GroqMessage(role = "user", content = promptCopy)
             ),
             maxTokens = 2048,
             temperature = 0.7
@@ -98,25 +98,6 @@ Game idea: $prompt
     }
 }
 
-fun String.toAiResponse() : AiResponse{
-
-    val regex = Regex("""<think>(.*?)</think>(.*)""", setOf(RegexOption.DOT_MATCHES_ALL, RegexOption.IGNORE_CASE))
-    val matchResult = regex.find(this.trim()) // Trim the input first
-
-    return if (matchResult != null && matchResult.groupValues.size == 3) {
-        val thoughtContent = matchResult.groupValues[1].trim()
-        val codeContent = matchResult.groupValues[2].trim()
-        AiResponse(
-            thought = thoughtContent.ifEmpty { null },
-            code = codeContent
-        )
-    } else {
-        // If the pattern doesn't match (e.g., no <think> tags),
-        // assume the entire response is code.
-        AiResponse(thought = null, code = this.trim())
-    }
-
-}
 
 
 @Serializable

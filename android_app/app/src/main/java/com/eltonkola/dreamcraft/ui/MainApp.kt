@@ -25,7 +25,6 @@ import com.composables.Gamepad2
 import com.composables.Globe
 import com.composables.Settings
 import com.eltonkola.dreamcraft.data.PreferencesManager
-import com.eltonkola.dreamcraft.remote.LocalModelManagerScreen
 import com.eltonkola.dreamcraft.ui.screens.GameListScreen
 import com.eltonkola.dreamcraft.ui.screens.ExploreScreen
 import com.eltonkola.dreamcraft.ui.screens.SettingsScreen
@@ -108,9 +107,6 @@ fun MainApp() {
                         FileManagerApp(projectName, navController)
                     }
 
-                    composable("localModels") { backStackEntry ->
-                        LocalModelManagerScreen( navController)
-                    }
 
                 }
             }

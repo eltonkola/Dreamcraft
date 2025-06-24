@@ -3,7 +3,8 @@ package com.eltonkola.dreamcraft.ui.screens.game
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.eltonkola.dreamcraft.data.GroqRepository
+import com.eltonkola.dreamcraft.data.AiRepository
+import com.eltonkola.dreamcraft.remote.AiIntegration
 import com.eltonkola.dreamcraft.ui.screens.game.editor.FileItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class GameViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val repository: GroqRepository
+    private val repository: AiRepository
 ) : ViewModel() {
 
     val projectName = savedStateHandle["projectName"] ?: ""
@@ -24,11 +25,16 @@ class GameViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<UiState>(UiState.Idle)
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
+    private val _activeAi = MutableStateFlow<AiIntegration>(AiIntegration.GROQ())
+    val activeAi: StateFlow<AiIntegration> = _activeAi.asStateFlow()
+
 
     private val _messages = MutableStateFlow<List<ChatMessage>>(emptyList())
     val messages: StateFlow<List<ChatMessage>> = _messages.asStateFlow()
 
-
+    fun setActiveAi(aiIntegration: AiIntegration) {
+        _activeAi.value = aiIntegration
+    }
 
     fun generateGame(prompt: String, file: FileItem?) {
         viewModelScope.launch {
@@ -36,7 +42,7 @@ class GameViewModel @Inject constructor(
 
             _messages.update { it + ChatMessage(prompt, true) }
 
-            repository.generateGame(prompt, projectName, file)
+            repository.generateGame(activeAi.value, prompt, projectName, file)
                 .onSuccess { filePath ->
                     _uiState.value = UiState.Success(filePath)
 

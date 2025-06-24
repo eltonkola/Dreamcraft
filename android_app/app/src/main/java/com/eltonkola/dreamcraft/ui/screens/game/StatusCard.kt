@@ -32,6 +32,7 @@ import com.composables.CircleCheck
 import com.composables.CircleX
 import com.composables.SendHorizontal
 import com.composables.TriangleAlert
+import com.eltonkola.dreamcraft.remote.AiIntegration
 
 
 @Composable
@@ -87,6 +88,7 @@ internal fun GenerateButton(
 
 @Composable
 internal fun StatusCard(
+    activeAi: AiIntegration,
     uiState: UiState,
     onDismissError: () -> Unit,
     modifier: Modifier
@@ -124,7 +126,7 @@ internal fun StatusCard(
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = "Calling Groq API to generate game...",
+                            text = "Calling ${activeAi.name} to generate game...",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }
