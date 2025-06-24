@@ -2,10 +2,10 @@ package com.eltonkola.dreamcraft.data.remote
 
 import android.content.Context
 import com.eltonkola.dreamcraft.data.FileManager
-import com.eltonkola.dreamcraft.remote.AiApiService
+import com.eltonkola.dreamcraft.remote.data.AiApiService
 import com.eltonkola.dreamcraft.data.AiRepository
-import com.eltonkola.dreamcraft.remote.AiIntegration
-import com.eltonkola.dreamcraft.remote.LocalLlmService
+import com.eltonkola.dreamcraft.remote.data.AiIntegration
+import com.eltonkola.dreamcraft.remote.data.LocalLlmService
 import com.eltonkola.dreamcraft.ui.screens.game.editor.FileItem
 
 

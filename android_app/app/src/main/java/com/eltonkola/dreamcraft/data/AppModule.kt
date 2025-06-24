@@ -5,9 +5,9 @@ import com.eltonkola.dreamcraft.BuildConfig
 import com.eltonkola.dreamcraft.data.local.FileManagerImpl
 import com.eltonkola.dreamcraft.data.remote.GroqApiService
 import com.eltonkola.dreamcraft.data.remote.AiRepositoryImpl
-import com.eltonkola.dreamcraft.remote.AiApiService
-import com.eltonkola.dreamcraft.remote.RemoteTaskFileSource
-import com.eltonkola.dreamcraft.remote.StaticRemoteSource
+import com.eltonkola.dreamcraft.remote.data.AiApiService
+import com.eltonkola.dreamcraft.remote.ui.RemoteTaskFileSource
+import com.eltonkola.dreamcraft.remote.ui.StaticRemoteSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

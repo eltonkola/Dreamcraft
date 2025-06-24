@@ -32,7 +32,7 @@ import com.composables.CircleCheck
 import com.composables.CircleX
 import com.composables.SendHorizontal
 import com.composables.TriangleAlert
-import com.eltonkola.dreamcraft.remote.AiIntegration
+import com.eltonkola.dreamcraft.remote.data.AiIntegration
 
 
 @Composable

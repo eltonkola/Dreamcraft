@@ -2,7 +2,7 @@ package com.eltonkola.dreamcraft.data.remote
 
 import com.eltonkola.dreamcraft.data.FileManager
 import com.eltonkola.dreamcraft.data.AiRepository
-import com.eltonkola.dreamcraft.remote.AiIntegration
+import com.eltonkola.dreamcraft.remote.data.AiIntegration
 import com.eltonkola.dreamcraft.ui.screens.game.editor.FileItem
 
 

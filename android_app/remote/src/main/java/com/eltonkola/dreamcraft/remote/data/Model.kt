@@ -1,4 +1,4 @@
-package com.eltonkola.dreamcraft.remote
+package com.eltonkola.dreamcraft.remote.data
 
 sealed class AiIntegration(val name: String) {
     class GROQ(
@@ -19,7 +19,7 @@ sealed class AiIntegration(val name: String) {
     }
 }
 
-fun String.toAiResponse() : AiResponse{
+fun String.toAiResponse() : AiResponse {
 
     val regex = Regex("""<think>(.*?)</think>(.*)""", setOf(RegexOption.DOT_MATCHES_ALL, RegexOption.IGNORE_CASE))
     val matchResult = regex.find(this.trim()) // Trim the input first

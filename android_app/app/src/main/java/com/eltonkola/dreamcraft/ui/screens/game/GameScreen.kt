@@ -1,6 +1,5 @@
 package com.eltonkola.dreamcraft.ui.screens.game
 
-import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,7 +34,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -46,7 +44,7 @@ import com.composables.Container
 import com.composables.Play
 import com.composables.SquarePen
 import com.eltonkola.dreamcraft.data.startGame
-import com.eltonkola.dreamcraft.remote.LocalModelManagerDialog
+import com.eltonkola.dreamcraft.remote.ui.LocalModelManagerDialog
 import com.eltonkola.dreamcraft.ui.screens.game.editor.FileItem
 import com.eltonkola.dreamcraft.ui.screens.game.editor.scanFilesFromPath
 import kotlin.collections.reversed

@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eltonkola.dreamcraft.data.AiRepository
-import com.eltonkola.dreamcraft.remote.AiIntegration
+import com.eltonkola.dreamcraft.remote.data.AiIntegration
 import com.eltonkola.dreamcraft.ui.screens.game.editor.FileItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,9 +1,9 @@
 package com.eltonkola.dreamcraft.data.remote
 
 import android.util.Log
-import com.eltonkola.dreamcraft.remote.AiApiService
-import com.eltonkola.dreamcraft.remote.AiResponse
-import com.eltonkola.dreamcraft.remote.toAiResponse
+import com.eltonkola.dreamcraft.remote.data.AiApiService
+import com.eltonkola.dreamcraft.remote.data.AiResponse
+import com.eltonkola.dreamcraft.remote.data.toAiResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName

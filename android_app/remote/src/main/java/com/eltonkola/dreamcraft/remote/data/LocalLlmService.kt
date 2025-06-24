@@ -1,4 +1,4 @@
-package com.eltonkola.dreamcraft.remote
+package com.eltonkola.dreamcraft.remote.data
 
 import android.content.Context
 import android.util.Log

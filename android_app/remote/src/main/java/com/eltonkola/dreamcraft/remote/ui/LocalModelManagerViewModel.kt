@@ -1,4 +1,4 @@
-package com.eltonkola.dreamcraft.remote
+package com.eltonkola.dreamcraft.remote.ui
 
 import android.app.Application
 import android.app.DownloadManager
