@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.util.Log
 import androidx.core.content.ContextCompat
+import com.eltonkola.dreamcraft.WebViewActivity
 import org.love2d.android.GameActivity
 import java.io.BufferedOutputStream
 import java.io.File
@@ -32,6 +33,13 @@ fun Context.startGame(projectName: String) {
     val intent = Intent(this, GameActivity::class.java).apply {
         data = Uri.fromFile(gameFile)
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+    }
+    startActivity(intent)
+}
+
+fun Context.openHtmlViewer(file: File) {
+    val intent = Intent(this, WebViewActivity::class.java).apply {
+        putExtra("html_path", file.absolutePath)
     }
     startActivity(intent)
 }

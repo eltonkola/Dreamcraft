@@ -2,6 +2,7 @@ package com.eltonkola.dreamcraft.remote.data
 
 import android.content.Context
 import android.util.Log
+import com.eltonkola.dreamcraft.core.ProjectConfig
 import com.google.mediapipe.tasks.genai.llminference.LlmInference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -12,28 +13,21 @@ class LocalLlmService(
 ) : AiApiService {
 
 
-   private val taskOptions = LlmInference.LlmInferenceOptions.builder()
-        .setModelPath(modelPath)
-        .setMaxTopK(64)
-        .build()
+   private val taskOptions : LlmInference.LlmInferenceOptions by lazy {
 
-    private val llmInference = LlmInference.createFromOptions(context, taskOptions)
+              LlmInference.LlmInferenceOptions.builder()
+                    .setModelPath(modelPath)
+                    .setMaxTopK(64)
+                    .build()
+   }
 
-    override suspend fun generateGame(prompt: String): AiResponse = withContext(Dispatchers.IO) {
+    private val llmInference : LlmInference  by lazy {
+        LlmInference.createFromOptions(context, taskOptions)
+    }
 
-        val promptCopy = """
-You are a Lua code generator.
-Your task is to create a complete, playable Love2D (LÖVE) game in Lua.
+    override suspend fun generateGame(prompt: String, config: ProjectConfig): AiResponse = withContext(Dispatchers.IO) {
 
-Requirements:
-- The game must be fully playable.
-- It must use arrow key controls.
-- It must be a single Lua source file with the complete code.
-- Do not include any explanation, comments, or markdown.
-- Output only plain Lua source code. Do not include ``` or any descriptive text.
-
-Game idea: $prompt
-""".trimIndent()
+        val promptCopy = config.promptTemplate.replace("____", prompt)
 
         try {
             val result = llmInference.generateResponse(promptCopy)

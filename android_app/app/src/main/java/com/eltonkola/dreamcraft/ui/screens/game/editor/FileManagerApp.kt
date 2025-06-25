@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -212,7 +213,7 @@ fun FileManagerApp(
                 },
                 onCreateFile = { fileName ->
                     try {
-                        val file = File(context.filesDir, "projects/$projectName/$fileName.lua" )
+                        val file = File(context.filesDir, "projects/$projectName/$fileName" )
                         // Ensure parent directory exists
                         file.parentFile?.mkdirs()
                         if (file.createNewFile()) {
@@ -235,6 +236,7 @@ fun FileManagerApp(
         Scaffold(
             topBar = {
                 TopAppBar(
+                    windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
                     title = {
                         Text(selectedFile?.name ?: "File Manager")
                     },
@@ -361,21 +363,21 @@ fun FileDrawerContent(
             TextField(
                 value = newFileName,
                 onValueChange = { newFileName = it },
-                label = { Text("Enter new file name (.lua)") },
+                label = { Text("Enter new file name") },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("example.lua")}
+                placeholder = { Text("example.txt")}
             )
             Spacer(modifier = Modifier.height(8.dp))
 
             Button(
-                enabled = newFileName.isNotBlank() && newFileName.endsWith(".lua"),
+                enabled = newFileName.isNotBlank(),
                 onClick = {
                     if (newFileName.isNotBlank()) {
-                        onCreateFile(newFileName.removeSuffix(".lua"))
+                        onCreateFile(newFileName)
                         newFileName = ""
                     }
                 }) {
-                Text("Create Lua File")
+                Text("Create File")
             }
         }
     }

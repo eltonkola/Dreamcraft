@@ -1,5 +1,6 @@
 package com.eltonkola.dreamcraft.data.remote
 
+import com.eltonkola.dreamcraft.core.ProjectConfig
 import com.eltonkola.dreamcraft.data.FileManager
 import com.eltonkola.dreamcraft.data.AiRepository
 import com.eltonkola.dreamcraft.remote.data.AiIntegration
@@ -10,11 +11,15 @@ class FakeLocalRepositoryImpl(
     private val fileManager: FileManager
 ) : AiRepository {
 
-    override suspend fun generateGame( integration: AiIntegration, prompt: String, projectName: String, file: FileItem?): Result<String> {
+    override suspend fun generateGame( integration: AiIntegration,
+                                       prompt: String,
+                                       projectName: String,
+                                       config: ProjectConfig,
+                                       file: FileItem?): Result<String> {
         return try {
             val luaCode = FAKE_GAME.trimIndent()
 
-            val filePath = fileManager.saveLuaFile(luaCode, projectName, file)
+            val filePath = fileManager.saveFile(luaCode, projectName, file)
 
             Result.success(filePath)
         } catch (e: Exception) {

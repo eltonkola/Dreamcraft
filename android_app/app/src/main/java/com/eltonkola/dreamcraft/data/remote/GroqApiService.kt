@@ -1,6 +1,7 @@
 package com.eltonkola.dreamcraft.data.remote
 
 import android.util.Log
+import com.eltonkola.dreamcraft.core.ProjectConfig
 import com.eltonkola.dreamcraft.remote.data.AiApiService
 import com.eltonkola.dreamcraft.remote.data.AiResponse
 import com.eltonkola.dreamcraft.remote.data.toAiResponse
@@ -30,20 +31,10 @@ class GroqApiService(
     }
 
 
-    override suspend fun generateGame(prompt: String): AiResponse = withContext(Dispatchers.IO) {
-        val promptCopy = """
-You are a Lua code generator.
-Your task is to create a complete, playable Love2D (LÖVE) game in Lua.
+    override suspend fun generateGame(prompt: String, config: ProjectConfig): AiResponse = withContext(Dispatchers.IO) {
 
-Requirements:
-- The game must be fully playable.
-- It must use arrow key controls.
-- It must be a single Lua source file with the complete code.
-- Do not include any explanation, comments, or markdown.
-- Output only plain Lua source code. Do not include ``` or any descriptive text.
+        val promptCopy = config.promptTemplate.replace("____", prompt)
 
-Game idea: $prompt
-""".trimIndent()
         val requestBody = GroqRequest(
             model = "deepseek-r1-distill-llama-70b",
             messages = listOf(

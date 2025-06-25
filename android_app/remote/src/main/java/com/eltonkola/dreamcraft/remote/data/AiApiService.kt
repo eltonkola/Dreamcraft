@@ -1,7 +1,9 @@
 package com.eltonkola.dreamcraft.remote.data
 
+import com.eltonkola.dreamcraft.core.ProjectConfig
+
 interface AiApiService {
-    suspend fun generateGame(prompt: String): AiResponse
+    suspend fun generateGame(prompt: String, config: ProjectConfig): AiResponse
 }
 
 

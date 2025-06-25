@@ -140,7 +140,7 @@ internal fun StatusCard(
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     Text(
-                        text = "Game generated successfully!",
+                        text = "Project generated successfully!",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier.padding(bottom = 4.dp)

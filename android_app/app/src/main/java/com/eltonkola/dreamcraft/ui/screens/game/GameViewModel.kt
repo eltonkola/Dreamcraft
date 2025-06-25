@@ -3,6 +3,7 @@ package com.eltonkola.dreamcraft.ui.screens.game
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eltonkola.dreamcraft.core.ProjectConfig
 import com.eltonkola.dreamcraft.data.AiRepository
 import com.eltonkola.dreamcraft.remote.data.AiIntegration
 import com.eltonkola.dreamcraft.ui.screens.game.editor.FileItem
@@ -36,13 +37,13 @@ class GameViewModel @Inject constructor(
         _activeAi.value = aiIntegration
     }
 
-    fun generateGame(prompt: String, file: FileItem?) {
+    fun generateGame(prompt: String, file: FileItem?, config: ProjectConfig) {
         viewModelScope.launch {
             _uiState.value = UiState.Loading
 
             _messages.update { it + ChatMessage(prompt, true) }
 
-            repository.generateGame(activeAi.value, prompt, projectName, file)
+            repository.generateGame(activeAi.value, prompt, projectName, config, file)
                 .onSuccess { filePath ->
                     _uiState.value = UiState.Success(filePath)
 

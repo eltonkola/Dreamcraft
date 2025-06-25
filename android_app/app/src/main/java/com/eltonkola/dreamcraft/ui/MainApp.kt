@@ -25,7 +25,7 @@ import com.composables.Gamepad2
 import com.composables.Globe
 import com.composables.Settings
 import com.eltonkola.dreamcraft.data.PreferencesManager
-import com.eltonkola.dreamcraft.ui.screens.GameListScreen
+import com.eltonkola.dreamcraft.ui.screens.ProjectListScreen
 import com.eltonkola.dreamcraft.ui.screens.ExploreScreen
 import com.eltonkola.dreamcraft.ui.screens.SettingsScreen
 import com.eltonkola.dreamcraft.ui.screens.game.GameScreen
@@ -88,7 +88,7 @@ fun MainApp() {
                     startDestination = "create",
                     modifier = Modifier.padding(paddingValues)
                 ) {
-                    composable("create") { GameListScreen(navController) }
+                    composable("create") { ProjectListScreen(navController) }
                     composable("explore") { ExploreScreen() }
                     composable("settings") {
                         SettingsScreen(

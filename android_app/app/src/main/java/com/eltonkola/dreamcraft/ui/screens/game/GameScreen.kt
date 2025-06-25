@@ -43,10 +43,16 @@ import com.composables.ChevronLeft
 import com.composables.Container
 import com.composables.Play
 import com.composables.SquarePen
+import com.eltonkola.dreamcraft.core.ProjectConfig
+import com.eltonkola.dreamcraft.core.ProjectType
+import com.eltonkola.dreamcraft.core.loadProjectMetadata
+import com.eltonkola.dreamcraft.core.projectTypes
+import com.eltonkola.dreamcraft.data.openHtmlViewer
 import com.eltonkola.dreamcraft.data.startGame
 import com.eltonkola.dreamcraft.remote.ui.LocalModelManagerDialog
 import com.eltonkola.dreamcraft.ui.screens.game.editor.FileItem
 import com.eltonkola.dreamcraft.ui.screens.game.editor.scanFilesFromPath
+import java.io.File
 import kotlin.collections.reversed
 
 sealed class UiState {
@@ -77,17 +83,24 @@ fun GameScreen(projectName: String,
     var files by remember { mutableStateOf<List<FileItem>>(emptyList()) }
     var selectedFile by remember { mutableStateOf<FileItem?>(null) }
     var expanded by remember { mutableStateOf(false) }
+    var config by remember { mutableStateOf<ProjectConfig>(projectTypes.first()) }
+
 
     LaunchedEffect(key1 = projectName) {
         files = scanFilesFromPath(context, projectName)
-        selectedFile = files.firstOrNull { it.name == "main.lua" } ?: files.firstOrNull()
+        val projectsDir = File(context.filesDir, "projects")
+
+        config = loadProjectMetadata(File(projectsDir , projectName)) ?: projectTypes.first()
+
+        selectedFile = files.firstOrNull { it.name == config.defaultName } ?: files.firstOrNull()
+
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(projectName) },
-                windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp), // Added this line
+                windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(ChevronLeft, contentDescription = "Back")
@@ -112,7 +125,13 @@ fun GameScreen(projectName: String,
                     }
 
                     IconButton(onClick = {
-                        context.startGame(projectName)
+                        if(config.type == ProjectType.LOVE2D){
+                            context.startGame(projectName)
+                        }else{
+                            val htmlFile = File(context.filesDir,  "projects/$projectName/${config.defaultName}")
+                            context.openHtmlViewer(htmlFile)
+                        }
+
                     }) {
                         Icon(Play, contentDescription = "Play")
                     }
@@ -188,7 +207,7 @@ fun GameScreen(projectName: String,
             GenerateButton(
                 uiState = uiState,
                 onGenerateClick = {
-                    viewModel.generateGame(it, selectedFile)
+                    viewModel.generateGame(it, selectedFile, config)
                 }
             )
         }

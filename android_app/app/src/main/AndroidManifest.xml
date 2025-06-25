@@ -35,6 +35,11 @@
             tools:replace="android:launchMode,android:taskAffinity"
             />
 
+        <activity android:name=".WebViewActivity"
+            android:launchMode="singleInstance"
+            android:taskAffinity="com.eltonkola.dreamcraft.web"
+            />
+
     </application>
 
 </manifest>

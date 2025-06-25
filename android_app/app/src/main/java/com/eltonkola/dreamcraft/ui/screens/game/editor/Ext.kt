@@ -18,7 +18,7 @@ fun scanFilesFromPath(context: Context, path: String): List<FileItem> {
             emptyList()
         } else {
             directory.listFiles()?.mapNotNull { file ->
-                if (file.isFile) {
+                if (file.isFile && !file.name.startsWith(".project.meta")) {
                     val content = try {
                         when (getFileType(file.name)) {
                             FileType.TEXT, FileType.LUA -> file.readText()
