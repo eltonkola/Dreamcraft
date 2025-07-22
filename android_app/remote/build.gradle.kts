@@ -61,6 +61,9 @@ dependencies {
     implementation(libs.kotlinx.serialization.json.v160)
 
 
+    implementation(libs.okhttp)
+    
+
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
