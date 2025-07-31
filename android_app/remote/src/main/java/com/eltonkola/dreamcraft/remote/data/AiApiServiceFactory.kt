@@ -14,8 +14,17 @@ class AiApiServiceFactory(
     private val context: Context,
     private val client: OkHttpClient
 ) {
+
+    private var lastConfig: ActiveAiConfig? = null
+    private var cachedService: AiApiService? = null
+
     fun create(config: ActiveAiConfig): AiApiService? {
-        return when (config) {
+        if (config == lastConfig && cachedService != null) {
+            return cachedService
+        }
+
+
+        val newService =  when (config) {
             is ActiveAiConfig.Cloud -> {
                 when (config.serviceType) {
                     CloudServiceType.GROQ -> GroqApiService(client, config.apiKey)
@@ -32,5 +41,10 @@ class AiApiServiceFactory(
                 null
             }
         }
+
+        lastConfig = config
+        cachedService = newService
+        return newService
+
     }
 }

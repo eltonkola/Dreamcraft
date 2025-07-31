@@ -7,36 +7,43 @@ import com.eltonkola.dreamcraft.remote.data.AiApiService
 import com.eltonkola.dreamcraft.remote.data.AiResponse
 import com.eltonkola.dreamcraft.remote.data.toAiResponse
 import com.google.mediapipe.tasks.genai.llminference.LlmInference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 class LocalModelApiService(
     private val context: Context,
     private val modelPath: String
 ) : AiApiService {
 
-    private val llmInference: LlmInference
 
-    init {
-        // Eager initialization with all original options
-        val options = LlmInference.LlmInferenceOptions.builder()
-            .setModelPath(modelPath)
-            .setMaxTokens(1024)
-            //.setTemperature(0.7f)
-            .setMaxTopK(64)
-            .build()
-
-        llmInference = LlmInference.createFromOptions(context, options)
-        Log.i("LocalModelApiService", "LLM initialized with maxTokens=1024, topK=64")
+    private val coroutineScope = CoroutineScope(Dispatchers.IO) // Background scope
+    private val llmInference: Deferred<LlmInference> = coroutineScope.async {
+        // Runs in background
+        Log.d("LocalModel", "Loading model in background...")
+        LlmInference.createFromOptions(
+            context,
+            LlmInference.LlmInferenceOptions.builder()
+                .setModelPath(modelPath)
+                .setMaxTokens(2048)
+                .setMaxTopK(40)
+                .build()
+        )
     }
 
-    override suspend fun generate(prompt: String, config: ProjectConfig): AiResponse =
-        withContext(Dispatchers.IO) {
-            val promptCopy = config.promptTemplate.replace("____", prompt)
+    override suspend fun generate(prompt: String, config: ProjectConfig): AiResponse {
+        val loadedModel = llmInference.await() // Suspends until model is ready
+        val promptCopy = config.promptTemplate.replace("____", prompt)
+
+        return withContext(Dispatchers.IO) {
             try {
-                llmInference.generateResponse(promptCopy).toAiResponse()
+                loadedModel.generateResponse(promptCopy).toAiResponse()
             } catch (e: Exception) {
                 Log.e("LocalModelApiService", "Generation failed", e)
                 throw e
             }
         }
+    }
+
 }

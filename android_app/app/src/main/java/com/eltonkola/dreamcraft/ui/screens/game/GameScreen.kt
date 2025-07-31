@@ -71,11 +71,16 @@ fun GameScreen(
                     }
                 },
                 actions = {
-                    Button(onClick = { showAiModelDialog = true }) {
+                    Button(
+                        modifier = Modifier.widthIn(max = 180.dp),
+                        onClick = { showAiModelDialog = true }) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Container, contentDescription = "AI Models")
                             Spacer(modifier = Modifier.size(8.dp))
-                            Text(activeAiConfig.getDisplayName())
+                            Text(
+                                activeAiConfig.getDisplayName(),
+                                maxLines = 2
+                            )
                         }
                     }
                     IconButton(onClick = { navController.navigate("editor/${projectName}") }) {
@@ -206,9 +211,16 @@ private fun ActiveAiConfig.getDisplayName(): String {
 
         is ActiveAiConfig.Local -> this.llmName
         is ActiveAiConfig.None -> "None"
-    }
+    }.limitLength(15)
 }
 
+fun String.limitLength(maxLength: Int): String {
+    return if (this.length > maxLength) {
+        this.substring(0, maxLength) + "..."
+    } else {
+        this
+    }
+}
 
 /**
  * A composable for displaying a single chat message bubble.
