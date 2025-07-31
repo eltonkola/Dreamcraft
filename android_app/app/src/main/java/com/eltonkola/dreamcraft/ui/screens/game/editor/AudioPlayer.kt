@@ -30,6 +30,7 @@ import com.composables.Pause
 import com.composables.Play
 import com.composables.SkipBack
 import com.composables.SkipForward
+import com.eltonkola.dreamcraft.core.model.FileItem
 
 
 @Composable

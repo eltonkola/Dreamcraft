@@ -25,6 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.composables.FileImage
+import com.eltonkola.dreamcraft.core.model.FileItem
 
 
 @Composable

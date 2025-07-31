@@ -1,5 +1,6 @@
 package com.eltonkola.dreamcraft.ui.screens.game
 
+import android.R.attr.text
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,7 +33,7 @@ import com.composables.CircleCheck
 import com.composables.CircleX
 import com.composables.SendHorizontal
 import com.composables.TriangleAlert
-import com.eltonkola.dreamcraft.remote.data.AiIntegration
+import com.eltonkola.dreamcraft.remote.data.ActiveAiConfig
 
 
 @Composable
@@ -70,16 +71,10 @@ internal fun GenerateButton(
             if (uiState is UiState.Loading) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(20.dp),
-                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }else{
                 Icon(SendHorizontal, contentDescription  = "Send")
             }
-
-            //   text = when (uiState) {
-            //                is UiState.Loading -> "Generating..."
-            //                else -> "Generate Game"
-            //            },
 
         }
     }
@@ -88,7 +83,7 @@ internal fun GenerateButton(
 
 @Composable
 internal fun StatusCard(
-    activeAi: AiIntegration,
+    activeAi: ActiveAiConfig,
     uiState: UiState,
     onDismissError: () -> Unit,
     modifier: Modifier
@@ -111,7 +106,7 @@ internal fun StatusCard(
             when (uiState) {
                 is UiState.Idle -> {
                     Text(
-                        text = "Ready to generate your Love2D game",
+                        text = "Ready to generate your next magic thought!",
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center
                     )
@@ -126,7 +121,7 @@ internal fun StatusCard(
                         )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = "Calling ${activeAi.name} to generate game...",
+                            text = "Calling ${activeAi.name()} to generate content...",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }
@@ -140,13 +135,13 @@ internal fun StatusCard(
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     Text(
-                        text = "Project generated successfully!",
+                        text = uiState.response.thought ?: "...",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
                     Text(
-                        text = "Saved to: ${uiState.filePath}",
+                        text = "Saved to: ${uiState.selectedFile.name}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

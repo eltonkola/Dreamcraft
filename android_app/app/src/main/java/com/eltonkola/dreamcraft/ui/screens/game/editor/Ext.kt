@@ -3,6 +3,9 @@ package com.eltonkola.dreamcraft.ui.screens.game.editor
 import android.R.attr.path
 import android.content.Context
 import android.net.Uri
+import com.eltonkola.dreamcraft.core.model.FileItem
+import com.eltonkola.dreamcraft.core.model.FileType
+import com.eltonkola.dreamcraft.core.model.getFileType
 import java.io.File
 
 

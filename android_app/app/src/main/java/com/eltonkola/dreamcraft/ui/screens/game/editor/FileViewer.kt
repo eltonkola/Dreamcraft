@@ -1,6 +1,8 @@
 package com.eltonkola.dreamcraft.ui.screens.game.editor
 
 import androidx.compose.runtime.Composable
+import com.eltonkola.dreamcraft.core.model.FileItem
+import com.eltonkola.dreamcraft.core.model.FileType
 
 
 @Composable

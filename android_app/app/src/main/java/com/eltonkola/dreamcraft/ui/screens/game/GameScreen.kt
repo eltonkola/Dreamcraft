@@ -1,39 +1,14 @@
+// File: GameScreen.kt
+
 package com.eltonkola.dreamcraft.ui.screens.game
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
+import android.R.id.message
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -42,223 +17,228 @@ import androidx.navigation.NavHostController
 import com.composables.ChevronLeft
 import com.composables.Container
 import com.composables.Play
+import com.composables.SendHorizontal
 import com.composables.SquarePen
 import com.eltonkola.dreamcraft.core.ProjectConfig
 import com.eltonkola.dreamcraft.core.ProjectType
 import com.eltonkola.dreamcraft.core.loadProjectMetadata
-import com.eltonkola.dreamcraft.core.projectTypes
+import com.eltonkola.dreamcraft.core.model.FileItem
 import com.eltonkola.dreamcraft.data.openHtmlViewer
 import com.eltonkola.dreamcraft.data.startGame
+import com.eltonkola.dreamcraft.remote.data.ActiveAiConfig
+import com.eltonkola.dreamcraft.remote.data.CloudServiceType
 import com.eltonkola.dreamcraft.remote.ui.LocalModelManagerDialog
-import com.eltonkola.dreamcraft.ui.screens.game.editor.FileItem
 import com.eltonkola.dreamcraft.ui.screens.game.editor.scanFilesFromPath
 import java.io.File
-import kotlin.collections.reversed
-
-sealed class UiState {
-    object Idle : UiState()
-    object Loading : UiState()
-    data class Success(val filePath: String) : UiState()
-    data class Error(val message: String) : UiState()
-}
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GameScreen(projectName: String,
-               navController: NavHostController,
-               viewModel: GameViewModel = hiltViewModel()
-               ) {
-
-
+fun GameScreen(
+    projectName: String,
+    navController: NavHostController,
+    viewModel: GameViewModel = hiltViewModel()
+) {
+    // Collect the state from the fully refactored ViewModel
     val uiState by viewModel.uiState.collectAsState()
     val messages by viewModel.messages.collectAsState()
-
-    val activeAi by viewModel.activeAi.collectAsState()
+    val activeAiConfig by viewModel.activeAiConfig.collectAsState()
 
     var showAiModelDialog by remember { mutableStateOf(false) }
-
     val context = LocalContext.current
 
+    // State for the file list and selection
     var files by remember { mutableStateOf<List<FileItem>>(emptyList()) }
     var selectedFile by remember { mutableStateOf<FileItem?>(null) }
     var expanded by remember { mutableStateOf(false) }
-    var config by remember { mutableStateOf<ProjectConfig>(projectTypes.first()) }
-
+    var config by remember { mutableStateOf<ProjectConfig?>(null) }
 
     LaunchedEffect(key1 = projectName) {
         files = scanFilesFromPath(context, projectName)
         val projectsDir = File(context.filesDir, "projects")
-
-        config = loadProjectMetadata(File(projectsDir , projectName)) ?: projectTypes.first()
-
-        selectedFile = files.firstOrNull { it.name == config.defaultName } ?: files.firstOrNull()
-
+        val loadedConfig = loadProjectMetadata(File(projectsDir, projectName))
+        config = loadedConfig
+        // Set the initial selected file based on the project config
+        selectedFile = files.firstOrNull { it.name == loadedConfig?.defaultName } ?: files.firstOrNull()
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(projectName) },
-                windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(ChevronLeft, contentDescription = "Back")
                     }
                 },
                 actions = {
-
-                    Button(onClick = {
-                        showAiModelDialog = true
-                    }) {
-                        Row {
-                            Icon(Container, contentDescription = "Local Models")
+                    Button(onClick = { showAiModelDialog = true }) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Container, contentDescription = "AI Models")
                             Spacer(modifier = Modifier.size(8.dp))
-                            Text(activeAi.shortName())
+                            Text(activeAiConfig.getDisplayName())
                         }
                     }
-
-                    IconButton(onClick = {
-                        navController.navigate("editor/${projectName}")
-                    }) {
+                    IconButton(onClick = { navController.navigate("editor/${projectName}") }) {
                         Icon(SquarePen, contentDescription = "Edit")
                     }
-
                     IconButton(onClick = {
-                        if(config.type == ProjectType.LOVE2D){
-                            context.startGame(projectName)
-                        }else{
-                            val htmlFile = File(context.filesDir,  "projects/$projectName/${config.defaultName}")
-                            context.openHtmlViewer(htmlFile)
+                        config?.let { cfg ->
+                            if (cfg.type == ProjectType.LOVE2D) {
+                                context.startGame(projectName)
+                            } else {
+                                val htmlFile = File(context.filesDir, "projects/$projectName/${cfg.defaultName}")
+                                context.openHtmlViewer(htmlFile)
+                            }
                         }
-
                     }) {
                         Icon(Play, contentDescription = "Play")
                     }
                 }
             )
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
-        ) {
-            LazyColumn(
+        },
+        bottomBar = {
+            Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                reverseLayout = true
+                    .fillMaxWidth()
+                    .windowInsetsPadding(WindowInsets.ime)
             ) {
-                items(messages.reversed()) { chatMessage ->
-                    MessageBubble(chatMessage)
-                }
-            }
+                StatusCard(
+                    activeAi = activeAiConfig,
+                    uiState = uiState,
+                    onDismissError = viewModel::resetState,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            StatusCard(
-                activeAi = activeAi,
-                uiState = uiState,
-                onDismissError = viewModel::resetState,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-            )
+                Spacer(modifier = Modifier.height(8.dp))
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            if (files.isNotEmpty() && selectedFile != null) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = { expanded = !expanded }
-                ) {
-                    TextField(
-                        value = selectedFile?.name ?: "Select File",
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier.menuAnchor()
-                    )
-                    ExposedDropdownMenu (
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
+                // File selection dropdown
+                if (files.isNotEmpty()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        files.forEach { file ->
-                            DropdownMenuItem(
-                                text = { Text(file.name) },
-                                onClick = {
-                                    selectedFile = file
-                                    expanded = false
-                                    // Optional: if you want to clear messages or update ViewModel state when file changes
-                                    // viewModel.setCurrentFile(file)
-                                }
+                        Text(
+                            "Target File:",
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                        ExposedDropdownMenuBox(
+                            expanded = expanded,
+                            onExpandedChange = { expanded = !expanded }
+                        ) {
+                            TextField(
+                                value = selectedFile?.name ?: "Select a file",
+                                onValueChange = {},
+                                readOnly = true,
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                                modifier = Modifier.menuAnchor()
                             )
+                            ExposedDropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
+                            ) {
+                                files.forEach { file ->
+                                    DropdownMenuItem(
+                                        text = { Text(file.name) },
+                                        onClick = {
+                                            selectedFile = file
+                                            expanded = false
+                                        }
+                                    )
+                                }
+                            }
                         }
                     }
                 }
-                }
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                GenerateButton(
+                    uiState = uiState,
+                    onGenerateClick = { prompt ->
+                        config?.let { cfg ->
+                            selectedFile?.let { file ->
+                                viewModel.generateGame(prompt, cfg, file)
+                            }
+                        }
+                    }
+                )
             }
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            GenerateButton(
-                uiState = uiState,
-                onGenerateClick = {
-                    viewModel.generateGame(it, selectedFile, config)
-                }
-            )
+        }
+    ) { innerPadding ->
+        // Main content area
+        LazyColumn(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            reverseLayout = true
+        ) {
+            items(messages.reversed()) { chatMessage ->
+                MessageBubble(chatMessage)
+            }
         }
 
-
+        // The dialog call is now simplified and self-contained
         LocalModelManagerDialog(
             showDialog = showAiModelDialog,
-            onDismiss = { showAiModelDialog = false },
-            currentActiveAi = activeAi,
-            onAiSelected = { selectedAi ->
-                viewModel.setActiveAi(selectedAi)
-                showAiModelDialog = false
-            }
+            onDismiss = { showAiModelDialog = false }
         )
+    }
+}
 
+/**
+ * A helper extension function to get a user-friendly display name from the ActiveAiConfig.
+ */
+private fun ActiveAiConfig.getDisplayName(): String {
+    return when (this) {
+        is ActiveAiConfig.Cloud -> when (this.serviceType) {
+            CloudServiceType.GROQ -> "Groq"
+            CloudServiceType.OPENAI -> "OpenAI"
+            CloudServiceType.GEMINI -> "Gemini"
+            CloudServiceType.CLAUDE -> "Claude"
+            CloudServiceType.FAKE -> "Fake"
+        }
+
+        is ActiveAiConfig.Local -> this.llmName
+        is ActiveAiConfig.None -> "None"
     }
 }
 
 
-
-
+/**
+ * A composable for displaying a single chat message bubble.
+ */
 @Composable
-fun MessageBubble(message: ChatMessage) {
+fun MessageBubble(message: ChatMessage){
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = if (message.isUser) Arrangement.End else Arrangement.Start
-    ) {
-        Card(
-            modifier = Modifier.widthIn(max = 280.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = if (message.isUser) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    MaterialTheme.colorScheme.surfaceVariant
-                }
-            )
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = if (message.isFromUser) Arrangement.End else Arrangement.Start
         ) {
-            Text(
-                text = message.text,
-                modifier = Modifier.padding(12.dp),
-                color = if (message.isUser) {
-                    MaterialTheme.colorScheme.onPrimary
-                } else {
-                    MaterialTheme.colorScheme.onSurfaceVariant
-                }
-            )
+            Card(
+                modifier = Modifier.widthIn(max = 300.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (message.isFromUser) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.surfaceVariant
+                    }
+                )
+            ) {
+                Text(
+                    text = message.text,
+                    modifier = Modifier.padding(12.dp),
+                    color = if (message.isFromUser) {
+                        MaterialTheme.colorScheme.onPrimary
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    }
+                )
+            }
         }
     }
-}
 
-data class ChatMessage(
-    val text: String,
-    val isUser: Boolean
-)

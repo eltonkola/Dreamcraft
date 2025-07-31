@@ -1,13 +1,14 @@
 package com.eltonkola.dreamcraft.data
 
 import android.content.Context
-import com.eltonkola.dreamcraft.BuildConfig
+import com.eltonkola.dreamcraft.core.data.FileManager
+import com.eltonkola.dreamcraft.core.data.RemoteTaskFileSource
+import com.eltonkola.dreamcraft.core.data.StaticRemoteSource
 import com.eltonkola.dreamcraft.data.local.FileManagerImpl
-import com.eltonkola.dreamcraft.data.remote.GroqApiService
 import com.eltonkola.dreamcraft.data.remote.AiRepositoryImpl
-import com.eltonkola.dreamcraft.remote.data.AiApiService
-import com.eltonkola.dreamcraft.remote.ui.RemoteTaskFileSource
-import com.eltonkola.dreamcraft.remote.ui.StaticRemoteSource
+import com.eltonkola.dreamcraft.remote.data.AiApiServiceFactory
+import com.eltonkola.dreamcraft.remote.data.AiPreferencesRepository
+import com.eltonkola.dreamcraft.remote.data.DataStoreAiPreferencesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,16 +31,6 @@ object AppModule {
             .build()
     }
 
-    @Provides
-    @Singleton
-    fun provideGroqApiService(
-        client: OkHttpClient
-    ): AiApiService {
-        return GroqApiService(
-            client = client,
-            apiKey = BuildConfig.GROQ_API_KEY //TODO - check if PreferencesManager is using custom key
-        )
-    }
 
     @Provides
     @Singleton
@@ -52,15 +43,19 @@ object AppModule {
     @Provides
     @Singleton
     fun provideGroqRepository(
-        apiService: AiApiService,
-        fileManager: FileManager,
-        @ApplicationContext context: Context
+        aiApiServiceFactory: AiApiServiceFactory,
+        fileManager: FileManager
     ): AiRepository {
+        return AiRepositoryImpl(aiApiServiceFactory, fileManager)
+    }
 
-
-        return AiRepositoryImpl(apiService, fileManager, context)
-
-       // return FakeLocalRepositoryImpl(fileManager)
+    @Provides
+    @Singleton
+    fun provideAiApiServiceFactory(
+        @ApplicationContext context: Context,
+        client: OkHttpClient
+    ): AiApiServiceFactory {
+        return AiApiServiceFactory(context, client)
     }
 
     @Provides
@@ -69,5 +64,13 @@ object AppModule {
     ): RemoteTaskFileSource {
         return StaticRemoteSource()
     }
-}
 
+    @Provides
+    @Singleton
+    fun provideAiPreferencesRepository(
+        @ApplicationContext context: Context,
+    ): AiPreferencesRepository {
+        return DataStoreAiPreferencesRepository(context)
+    }
+
+}

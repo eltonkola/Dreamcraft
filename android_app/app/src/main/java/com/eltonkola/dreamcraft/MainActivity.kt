@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowInsetsControllerCompat
 import com.eltonkola.dreamcraft.ui.MainApp
 import com.eltonkola.dreamcraft.ui.theme.DreamcraftTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,6 +24,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen()
         enableEdgeToEdge()
+        WindowInsetsControllerCompat(window, window.decorView).run {
+            isAppearanceLightStatusBars = true
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             // Fix for three-button nav not properly going edge-to-edge.
             // See: https://issuetracker.google.com/issues/298296168

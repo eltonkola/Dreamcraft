@@ -1,35 +1,35 @@
 package com.eltonkola.dreamcraft.data.remote
 
-import android.content.Context
 import com.eltonkola.dreamcraft.core.ProjectConfig
-import com.eltonkola.dreamcraft.data.FileManager
-import com.eltonkola.dreamcraft.remote.data.AiApiService
+import com.eltonkola.dreamcraft.core.data.FileManager
+import com.eltonkola.dreamcraft.core.model.FileItem
 import com.eltonkola.dreamcraft.data.AiRepository
-import com.eltonkola.dreamcraft.remote.data.AiIntegration
-import com.eltonkola.dreamcraft.remote.data.LocalLlmService
-import com.eltonkola.dreamcraft.ui.screens.game.editor.FileItem
-
+import com.eltonkola.dreamcraft.remote.data.ActiveAiConfig
+import com.eltonkola.dreamcraft.remote.data.AiApiServiceFactory
+import com.eltonkola.dreamcraft.remote.data.AiResponse
 
 class AiRepositoryImpl(
-    private val groqApiService: AiApiService,
-    private val fileManager: FileManager,
-    private val context: Context
+    private val  aiApiServiceFactory: AiApiServiceFactory,
+    private val fileManager: FileManager
 ) : AiRepository {
 
-    override suspend fun generateGame(integration: AiIntegration,
+    override suspend fun generateGame(aiConfig: ActiveAiConfig,
                                       prompt: String,
                                       projectName: String,
                                       config: ProjectConfig,
-                                      file: FileItem?): Result<String> {
+                                      file: FileItem?): Result<AiResponse> {
         return try {
-            val response =
-                when(integration){
-                    is AiIntegration.GROQ -> groqApiService.generateGame(prompt, config)
-                    is AiIntegration.LOCAL -> LocalLlmService(integration.llmPath, context).generateGame(prompt, config)
-                }
+            val service = aiApiServiceFactory.create(aiConfig)
+            val response = service?.generate(prompt, config)
 
-            val filePath = fileManager.saveFile(response.code, projectName, file)
-            Result.success(response.thought ?: "Code generated and file updated: $filePath!")
+
+            if(response !=null){
+                fileManager.saveFile(response.code, projectName, file)
+
+                Result.success(response)
+            }else{
+                Result.failure(Exception("Cant create the ai config"))
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             Result.failure(e)

@@ -7,8 +7,8 @@ import com.eltonkola.dreamcraft.core.ProjectConfig
 import com.eltonkola.dreamcraft.core.loadProjectMetadata
 import com.eltonkola.dreamcraft.core.projectTypes
 import com.eltonkola.dreamcraft.core.saveProjectMetadata
-import com.eltonkola.dreamcraft.data.FileManager
-import com.eltonkola.dreamcraft.ui.screens.game.editor.FileItem
+import com.eltonkola.dreamcraft.core.data.FileManager
+import com.eltonkola.dreamcraft.core.model.FileItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File

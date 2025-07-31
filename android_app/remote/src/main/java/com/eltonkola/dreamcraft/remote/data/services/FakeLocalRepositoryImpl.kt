@@ -1,37 +1,19 @@
-package com.eltonkola.dreamcraft.data.remote
+package com.eltonkola.dreamcraft.remote.data.services
 
 import com.eltonkola.dreamcraft.core.ProjectConfig
-import com.eltonkola.dreamcraft.data.FileManager
-import com.eltonkola.dreamcraft.data.AiRepository
-import com.eltonkola.dreamcraft.remote.data.AiIntegration
-import com.eltonkola.dreamcraft.ui.screens.game.editor.FileItem
+import com.eltonkola.dreamcraft.remote.data.AiApiService
+import com.eltonkola.dreamcraft.remote.data.AiResponse
 
+class FakeApiServiceImpl() : AiApiService {
 
-class FakeLocalRepositoryImpl(
-    private val fileManager: FileManager
-) : AiRepository {
-
-    override suspend fun generateGame( integration: AiIntegration,
-                                       prompt: String,
-                                       projectName: String,
-                                       config: ProjectConfig,
-                                       file: FileItem?): Result<String> {
-        return try {
-            val luaCode = FAKE_GAME.trimIndent()
-
-            val filePath = fileManager.saveFile(luaCode, projectName, file)
-
-            Result.success(filePath)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Result.failure(e)
-        }
+    override suspend fun generate(prompt: String, config: ProjectConfig): AiResponse{
+        val luaCode = FAKE_GAME.trimIndent()
+        return AiResponse("", luaCode)
     }
+}
 
 
-    companion object {
-
-        const val FAKE_GAME = """
+const val FAKE_GAME = """
 -- main.lua (for Snake Game, to be loaded by your Game Maker)
 
 function love.load()
@@ -412,5 +394,4 @@ function love.mousereleased(x, y, button, istouch, presses)
     elseif button == 1 then love.touchreleased("mouse"..button, x,y,0,0,1) end
 end            
         """
-    }
-}
+

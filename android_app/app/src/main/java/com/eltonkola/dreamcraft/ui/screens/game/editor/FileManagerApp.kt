@@ -59,37 +59,10 @@ import com.composables.Menu
 import com.composables.PenLine
 import com.composables.Save
 import com.composables.Trash2
+import com.eltonkola.dreamcraft.core.model.FileItem
 import kotlinx.coroutines.launch
 import java.io.File
 
-// Data classes
-data class FileItem(
-    val id: String,
-    val name: String,
-    val type: FileType,
-    val content: String = "",
-    val uri: Uri? = null,
-    val isSaved: Boolean = true
-){
-    fun saveFile(){
-        uri?.path?.let {
-            val file = File(it)
-            file.writeText(content)
-        }
-    }
-}
-
-enum class FileType(val icon: ImageVector, val extensions: List<String>) {
-    LUA(FileCode, listOf("lua")),
-    TEXT(FilePen, listOf("txt", "md", "json", "xml", "html", "css", "js", "py", "java", "kt")),
-    IMAGE(FileImage, listOf("jpg", "jpeg", "png", "gif", "bmp", "webp")),
-    AUDIO(FileAudio2, listOf("mp3", "wav", "ogg", "m4a", "flac"))
-}
-
-fun getFileType(fileName: String): FileType {
-    val extension = fileName.substringAfterLast(".").lowercase()
-    return FileType.values().find { it.extensions.contains(extension) } ?: FileType.TEXT
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

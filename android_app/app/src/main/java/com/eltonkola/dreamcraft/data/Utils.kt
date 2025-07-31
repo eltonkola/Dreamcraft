@@ -7,12 +7,15 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.util.Log
 import androidx.core.content.ContextCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.preferencesDataStore
 import com.eltonkola.dreamcraft.WebViewActivity
 import org.love2d.android.GameActivity
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.util.prefs.Preferences
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import kotlin.jvm.java
@@ -89,3 +92,6 @@ private fun zipFolderContents(rootFolder: File, currentFolder: File, zipOut: Zip
         }
     }
 }
+
+
+

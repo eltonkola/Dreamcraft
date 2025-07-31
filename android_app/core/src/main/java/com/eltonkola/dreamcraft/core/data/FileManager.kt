@@ -1,6 +1,6 @@
-package com.eltonkola.dreamcraft.data
+package com.eltonkola.dreamcraft.core.data
 
-import com.eltonkola.dreamcraft.ui.screens.game.editor.FileItem
+import com.eltonkola.dreamcraft.core.model.FileItem
 
 interface FileManager {
     suspend fun saveFile(content: String, projectName: String, file: FileItem?): String
