@@ -65,6 +65,7 @@ fun GameScreen(
         topBar = {
             TopAppBar(
                 title = { Text(projectName) },
+                windowInsets = WindowInsets(0.dp), // Added this line
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(ChevronLeft, contentDescription = "Back")
