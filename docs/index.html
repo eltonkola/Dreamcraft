@@ -109,6 +109,8 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .nav-btn:hover {
@@ -158,19 +160,24 @@
             margin-top: 40px;
         }
 
-        .btn-primary {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            padding: 15px 35px;
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             border-radius: 30px;
             font-weight: 600;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 15px 35px;
         }
 
         .btn-primary:hover {
@@ -183,16 +190,22 @@
             color: var(--light);
             border: 2px solid var(--primary);
             padding: 15px 35px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
         }
 
         .btn-secondary:hover {
             background: rgba(110, 68, 255, 0.1);
             transform: translateY(-5px);
+        }
+
+        /* Improved button links */
+        .btn a, .nav-btn a {
+            color: inherit;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            height: 100%;
         }
 
         .hero-image {
@@ -614,27 +627,27 @@
                 flex-direction: column;
                 text-align: center;
             }
-            
+
             .hero-text {
                 max-width: 100%;
             }
-            
+
             .hero-text p {
                 margin: 0 auto 30px;
             }
-            
+
             .hero-btns {
                 justify-content: center;
             }
-            
+
             .steps {
                 flex-direction: column;
             }
-            
+
             .step:not(:last-child)::after {
                 display: none;
             }
-            
+
             .nav-links {
                 display: none;
             }
@@ -642,62 +655,63 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header id="header">
-        <div class="container">
-            <nav class="navbar">
-                <div class="logo">
-                    <i class="fas fa-gamepad"></i>
-                    <div class="logo-text">DreamCraft Studio</div>
-                </div>
-                <div class="nav-links">
-                    <a href="#features">Features</a>
-                    <a href="#how-it-works">How It Works</a>
-                    <a href="#testimonials">Testimonials</a>
-                    <a href="#download">Download</a>
-                </div>
-                <button class="nav-btn">Get Early Access</button>
-            </nav>
-        </div>
-    </header>
+<!-- Header -->
+<header id="header">
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-gamepad"></i>
+                <div class="logo-text">DreamCraft Studio</div>
+            </div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#testimonials">Testimonials</a>
+                <a href="#download">Download</a>
+            </div>
+            <a href="https://github.com/eltonkola/Dreamcraft/releases/download/v1.0.0/app-release-unsigned-signed.apk" class="nav-btn">Get App Now</a>
+        </nav>
+    </div>
+</header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-text">
-                    <h1>Create Games with AI. Share. Play.</h1>
-                    <p>DreamCraft Studio puts the power of game development in your hands. No coding required - just your imagination and our AI.</p>
-                    <div class="hero-btns">
-                        <button class="btn-primary"><i class="fab fa-google-play"></i> Download Now</button>
-                        <button class="btn-secondary">Learn More</button>
-                    </div>
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Create Games with AI. Share. Play.</h1>
+                <p>DreamCraft Studio puts the power of game development in your hands. No coding required - just your imagination and our AI.</p>
+                <div class="hero-btns">
+                    <a href="https://github.com/eltonkola/Dreamcraft/releases/download/v1.0.0/app-release-unsigned-signed.apk" class="btn btn-primary">
+                        <i class="fab fa-google-play"></i> Download Now
+                    </a>
+                    <a href="https://github.com/eltonkola/Dreamcraft/" class="btn btn-secondary">Learn More</a>
                 </div>
-                <div class="hero-image">
-                    <div class="phone-mockup">
-                        <div class="phone-screen">
-                            <div class="app-content">
-                                <div class="app-header">
-                                    <h3 style="color: white;">Top Games</h3>
-                                    <i class="fas fa-search" style="color: var(--gray);"></i>
+            </div>
+            <div class="hero-image">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="app-content">
+                            <div class="app-header">
+                                <h3 style="color: white;">Top Games</h3>
+                                <i class="fas fa-search" style="color: var(--gray);"></i>
+                            </div>
+                            <div class="game-card">
+                                <div class="game-title">Cyber Nexus</div>
+                                <div class="game-creator">by @AlexCreator</div>
+                                <div class="game-thumbnail"></div>
+                                <div class="game-stats">
+                                    <span><i class="fas fa-play-circle"></i> 12.4K</span>
+                                    <span><i class="fas fa-heart"></i> 845</span>
                                 </div>
-                                <div class="game-card">
-                                    <div class="game-title">Cyber Nexus</div>
-                                    <div class="game-creator">by @AlexCreator</div>
-                                    <div class="game-thumbnail"></div>
-                                    <div class="game-stats">
-                                        <span><i class="fas fa-play-circle"></i> 12.4K</span>
-                                        <span><i class="fas fa-heart"></i> 845</span>
-                                    </div>
-                                </div>
-                                <div class="game-card">
-                                    <div class="game-title">Dragon's Legacy</div>
-                                    <div class="game-creator">by @GamerGirl93</div>
-                                    <div class="game-thumbnail"></div>
-                                    <div class="game-stats">
-                                        <span><i class="fas fa-play-circle"></i> 8.7K</span>
-                                        <span><i class="fas fa-heart"></i> 621</span>
-                                    </div>
+                            </div>
+                            <div class="game-card">
+                                <div class="game-title">Dragon's Legacy</div>
+                                <div class="game-creator">by @GamerGirl93</div>
+                                <div class="game-thumbnail"></div>
+                                <div class="game-stats">
+                                    <span><i class="fas fa-play-circle"></i> 8.7K</span>
+                                    <span><i class="fas fa-heart"></i> 621</span>
                                 </div>
                             </div>
                         </div>
@@ -705,208 +719,209 @@
                 </div>
             </div>
         </div>
-        <div class="decor circle circle-1"></div>
-        <div class="decor circle circle-3"></div>
-    </section>
+    </div>
+    <div class="decor circle circle-1"></div>
+    <div class="decor circle circle-3"></div>
+</section>
 
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="container">
-            <div class="section-title">
-                <h2>Powerful Features</h2>
-                <p>Everything you need to create, share, and play amazing games</p>
+<!-- Features Section -->
+<section class="features" id="features">
+    <div class="container">
+        <div class="section-title">
+            <h2>Powerful Features</h2>
+            <p>Everything you need to create, share, and play amazing games</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3>AI-Powered Creation</h3>
+                <p>Our advanced AI transforms your ideas into playable games. Just describe your vision and watch it come to life.</p>
             </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <h3>AI-Powered Creation</h3>
-                    <p>Our advanced AI transforms your ideas into playable games. Just describe your vision and watch it come to life.</p>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-share-alt"></i>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-share-alt"></i>
-                    </div>
-                    <h3>Share Your Creations</h3>
-                    <p>Publish your games to our community and let others experience your imagination. Get feedback and improve.</p>
+                <h3>Share Your Creations</h3>
+                <p>Publish your games to our community and let others experience your imagination. Get feedback and improve.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-gamepad"></i>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-gamepad"></i>
+                <h3>Play Endless Games</h3>
+                <p>Discover thousands of games created by our community. New adventures every day across all genres.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="how-it-works" id="how-it-works">
+    <div class="container">
+        <div class="section-title">
+            <h2>How It Works</h2>
+            <p>Creating your dream game has never been easier</p>
+        </div>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Describe Your Game</h3>
+                <p>Tell our AI about your game concept, characters, and world. Use text, voice, or even doodles.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>AI Builds Your Game</h3>
+                <p>Our powerful AI generates a complete game with mechanics, graphics, and sound based on your input.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Customize & Refine</h3>
+                <p>Tweak the details, adjust difficulty, and add personal touches with our intuitive editor.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Share & Play</h3>
+                <p>Publish your game to our platform, share with friends, and discover games from creators worldwide.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="testimonials" id="testimonials">
+    <div class="container">
+        <div class="section-title">
+            <h2>What Creators Say</h2>
+            <p>Join thousands of creators bringing their visions to life</p>
+        </div>
+        <div class="testimonial-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    "I always dreamed of making my own game but didn't know how to code. DreamCraft made it possible! My puzzle game has over 50,000 plays now!"
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar"></div>
+                    <div class="author-info">
+                        <h4>Sarah Johnson</h4>
+                        <p>Creator of "Puzzle Dimensions"</p>
                     </div>
-                    <h3>Play Endless Games</h3>
-                    <p>Discover thousands of games created by our community. New adventures every day across all genres.</p>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    "The AI understands exactly what I want. I described a cyberpunk RPG and got a playable prototype in minutes. This is revolutionary!"
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar"></div>
+                    <div class="author-info">
+                        <h4>Marcus Chen</h4>
+                        <p>Game Developer</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-content">
+                    "My students love using DreamCraft to learn game design. It sparks creativity while teaching important design principles."
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar"></div>
+                    <div class="author-info">
+                        <h4>Dr. Emily Rodriguez</h4>
+                        <p>Computer Science Professor</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+    <div class="decor circle circle-2"></div>
+</section>
 
-    <!-- How It Works -->
-    <section class="how-it-works" id="how-it-works">
-        <div class="container">
-            <div class="section-title">
-                <h2>How It Works</h2>
-                <p>Creating your dream game has never been easier</p>
+<!-- CTA Section -->
+<section class="cta" id="download">
+    <div class="container">
+        <div class="cta-content">
+            <h2>Start Creating Today</h2>
+            <p>Join over 500,000 creators who are bringing their game ideas to life with DreamCraft Studio</p>
+            <a href="https://github.com/eltonkola/Dreamcraft/releases/download/v1.0.0/app-release-unsigned-signed.apk" class="btn btn-primary" style="padding: 18px 45px; font-size: 1.1rem;">
+                <i class="fab fa-google-play"></i> Download on Google Play
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-col">
+                <div class="logo" style="margin-bottom: 20px;">
+                    <i class="fas fa-gamepad"></i>
+                    <div class="logo-text">DreamCraft Studio</div>
+                </div>
+                <p style="color: var(--gray); max-width: 300px;">The future of game creation is here. Powered by AI, driven by imagination.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                </div>
             </div>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Describe Your Game</h3>
-                    <p>Tell our AI about your game concept, characters, and world. Use text, voice, or even doodles.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>AI Builds Your Game</h3>
-                    <p>Our powerful AI generates a complete game with mechanics, graphics, and sound based on your input.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Customize & Refine</h3>
-                    <p>Tweak the details, adjust difficulty, and add personal touches with our intuitive editor.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <h3>Share & Play</h3>
-                    <p>Publish your game to our platform, share with friends, and discover games from creators worldwide.</p>
-                </div>
+            <div class="footer-col">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Press</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Tutorials</a></li>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Community</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                    <li><a href="#">Copyright</a></li>
+                </ul>
             </div>
         </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section class="testimonials" id="testimonials">
-        <div class="container">
-            <div class="section-title">
-                <h2>What Creators Say</h2>
-                <p>Join thousands of creators bringing their visions to life</p>
-            </div>
-            <div class="testimonial-grid">
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        "I always dreamed of making my own game but didn't know how to code. DreamCraft made it possible! My puzzle game has over 50,000 plays now!"
-                    </div>
-                    <div class="testimonial-author">
-                        <div class="author-avatar"></div>
-                        <div class="author-info">
-                            <h4>Sarah Johnson</h4>
-                            <p>Creator of "Puzzle Dimensions"</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        "The AI understands exactly what I want. I described a cyberpunk RPG and got a playable prototype in minutes. This is revolutionary!"
-                    </div>
-                    <div class="testimonial-author">
-                        <div class="author-avatar"></div>
-                        <div class="author-info">
-                            <h4>Marcus Chen</h4>
-                            <p>Game Developer</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        "My students love using DreamCraft to learn game design. It sparks creativity while teaching important design principles."
-                    </div>
-                    <div class="testimonial-author">
-                        <div class="author-avatar"></div>
-                        <div class="author-info">
-                            <h4>Dr. Emily Rodriguez</h4>
-                            <p>Computer Science Professor</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="copyright">
+            &copy; 2023 DreamCraft Studio. All rights reserved.
         </div>
-        <div class="decor circle circle-2"></div>
-    </section>
+    </div>
+</footer>
 
-    <!-- CTA Section -->
-    <section class="cta" id="download">
-        <div class="container">
-            <div class="cta-content">
-                <h2>Start Creating Today</h2>
-                <p>Join over 500,000 creators who are bringing their game ideas to life with DreamCraft Studio</p>
-                <button class="btn-primary" style="padding: 18px 45px; font-size: 1.1rem;">
-                    <i class="fab fa-google-play"></i> Download on Google Play
-                </button>
-            </div>
-        </div>
-    </section>
+<script>
+    // Header scroll effect
+    window.addEventListener('scroll', function() {
+        const header = document.getElementById('header');
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-col">
-                    <div class="logo" style="margin-bottom: 20px;">
-                        <i class="fas fa-gamepad"></i>
-                        <div class="logo-text">DreamCraft Studio</div>
-                    </div>
-                    <p style="color: var(--gray); max-width: 300px;">The future of game creation is here. Powered by AI, driven by imagination.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-discord"></i></a>
-                    </div>
-                </div>
-                <div class="footer-col">
-                    <h3>Company</h3>
-                    <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Press</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h3>Resources</h3>
-                    <ul>
-                        <li><a href="#">Tutorials</a></li>
-                        <li><a href="#">Documentation</a></li>
-                        <li><a href="#">Community</a></li>
-                        <li><a href="#">Support</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h3>Legal</h3>
-                    <ul>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Cookie Policy</a></li>
-                        <li><a href="#">Copyright</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="copyright">
-                &copy; 2023 DreamCraft Studio. All rights reserved.
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        // Header scroll effect
-        window.addEventListener('scroll', function() {
-            const header = document.getElementById('header');
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
             });
         });
-    </script>
+    });
+</script>
 </body>
 </html>
