@@ -1,7 +1,7 @@
 # 🚀 Dreamcraft 🎨
 
 <p align="center">
-  <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="Dreamcraft Launcher Icon" width="150"/>
+  <img src="android_app/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="Dreamcraft Launcher Icon" width="150"/>
 </p>
 
 **Unleash your creativity and bring your game ideas to life, powered by AI!**
@@ -39,17 +39,13 @@ Contributions are welcome! If you have ideas for new features, bug fixes, or imp
 
 1.  Fork the Project
 2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3.  Commit your Changes (`git commit -m 'Add some AmazingFeature''''`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4.  Push to the Branch (`git push origin feature/AmazingFeature`)
 5.  Open a Pull Request
 
 ## 📄 License
 
-Distributed under the [Your License Type Here - e.g., MIT License]. See `LICENSE.txt` for more information. *(You'll need to add a LICENSE.txt file if you don't have one)*
-
-## 📧 Contact
-
-Your Name/Project Link - your@email.com or [Project Link](https://github.com/yourusername/Dreamcraft)
+Distributed under the Apache License 2.0. See `LICENSE.txt` for more information. *(You'll need to create a `LICENSE.txt` file in the root of your repository with the Apache 2.0 license text.)*
 
 Acknowledgements:
 *   [Any libraries or resources you want to thank]

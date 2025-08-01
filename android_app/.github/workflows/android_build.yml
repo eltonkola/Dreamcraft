@@ -1,0 +1,46 @@
+name: Android CI Build
+
+on:
+  push:
+    branches: [ main ] # Builds on pushes to the 'main' branch
+  pull_request:
+    branches: [ main ] # Also builds on pull requests targeting 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
+      # This action automatically uses your project's Gradle wrapper
+      # and sets up caching for dependencies.
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
+      # Ensures the gradlew script is executable.
+      # Note: paths are relative to the project root where the workflow is checked out.
+
+    - name: Build Release APK
+      run: ./gradlew :app:assembleRelease
+      # Assumes your application module is named 'app'.
+      # Change ':app:assembleRelease' if your module name or build variant is different.
+
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: dreamcraft-apk
+        # This is the name the artifact will have in GitHub.
+        path: app/build/outputs/apk/release/app-release.apk
+        # Path to the generated APK.
+        # Verify this path matches your project's output directory for release APKs.
+        if-no-files-found: error # Fails the workflow if the APK isn't found
