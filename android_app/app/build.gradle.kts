@@ -1,6 +1,3 @@
-import org.gradle.kotlin.dsl.implementation
-import java.io.FileInputStream
-import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -9,25 +6,6 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.serialization)
 }
-
-// Function to safely load properties from local.properties
-fun getApiKey(project: Project, propertyName: String): String {
-    val localPropertiesFile = project.rootProject.file("local.properties")
-    if (localPropertiesFile.exists()) {
-        val properties = Properties()
-        FileInputStream(localPropertiesFile).use { fis ->
-            properties.load(fis)
-        }
-        // Return property value or an empty string if not found
-        // The quotes are expected to be part of the value in local.properties
-        return properties.getProperty(propertyName, "\"\"")
-    }
-    // Fallback for CI: Read from environment variable if local.properties doesn't exist or key missing
-    // Gradle automatically makes environment variables available as project properties
-    // Note: env var names often match property names, but can be different if mapped in CI
-    return project.findProperty(propertyName)?.toString() ?: "\"\"" // Default to empty string literal if not found anywhere
-}
-
 
 android {
     namespace = "com.eltonkola.dreamcraft"
@@ -41,9 +19,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        val groqApiKey = getApiKey(project, "GROQ_API_KEY")
-        buildConfigField("String", "GROQ_API_KEY", "\"$groqApiKey\"")
 
     }
 

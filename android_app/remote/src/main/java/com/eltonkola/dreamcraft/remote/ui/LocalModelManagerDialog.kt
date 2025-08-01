@@ -138,7 +138,7 @@ private fun LocalModelManagerContent(
 
         // --- Cloud Services ---
         Text("Cloud Services", style = MaterialTheme.typography.titleSmall)
-        CloudServiceType.values().forEach { serviceType ->
+        CloudServiceType.values().filter { it != CloudServiceType.FAKE }.forEach { serviceType ->
             val apiKey = savedApiKeys[serviceType]
             val isSelected = activeAiConfig is ActiveAiConfig.Cloud && (activeAiConfig as ActiveAiConfig.Cloud).serviceType == serviceType
 
