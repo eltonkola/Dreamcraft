@@ -37,7 +37,9 @@ class GroqApiService(
 
         // Create the request body using the SharedMessage class
         val requestBody = GroqRequest(
-            model = "llama3-70b-8192", // A powerful and commonly used model on Groq
+            model = "llama3-70b-8192",
+          //  model = "qwen/qwen3-32b",
+//            model="llama-3.3-70b-versatile",
             messages = listOf(SharedMessage(role = "user", content = promptCopy)),
             maxTokens = 4096,
             temperature = 0.7

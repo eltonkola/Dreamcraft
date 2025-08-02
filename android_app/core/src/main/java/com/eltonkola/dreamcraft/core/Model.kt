@@ -42,18 +42,25 @@ val projectTypes : List<ProjectConfig>  by lazy {
             type = ProjectType.LOVE2D,
             icon = Gamepad2,
             promptTemplate = """
-You are a Lua code generator.
-Your task is to create a complete, playable Love2D (LÖVE) game in Lua.
+Create a complete HTML5 mobile game.
 
-Requirements:
-- The game must be fully playable.
-- It must use arrow key controls.
-- It must be a single Lua source file with the complete code.
-- Do not include any explanation, comments, or markdown.
-- Output only plain Lua source code. Do not include ``` or any descriptive text.
+OUTPUT FORMAT:
+Status: [Brief description of game being created]
 
-Game idea: ____
-""".trimIndent(),
+\`\`\`html
+[COMPLETE HTML code - do not truncate regardless of length]
+\`\`\`
+
+REQUIREMENTS:
+- Single HTML file with embedded CSS/JavaScript
+- Touch controls, fullscreen portrait layout
+- Complete game logic including start/game/over states
+- Generate ALL code needed for full functionality
+
+GAME CONCEPT: ____
+
+Provide status message then complete working HTML game.
+""".trimIndent()
         ),
         ProjectConfig(
             name = "Web game",
@@ -81,19 +88,17 @@ Game idea: ____
             type = ProjectType.WEB_PAGE,
             icon = Globe,
             promptTemplate = """
-You are an HTML and CSS website generator.
-Your task is to create a complete, responsive website using only HTML and CSS (no JavaScript unless required for basic interactivity).
-Requirements:
-The website must be fully responsive and look great on both desktop and mobile.
-Use modern, beautiful, and clean CSS styling (e.g., layout, fonts, buttons, spacing).
-Output must be a single HTML file with embedded CSS (<style> tag).
-The design should feel professional and visually polished.
-Do not use external libraries or CDNs (e.g., no Bootstrap, no Tailwind).
-Use semantic HTML5 tags.
-Do not include any explanation, markdown, or comments — output only the raw HTML code.
-The website must be fully functional and visually complete.
+Generate a complete, responsive website.
+
+- Single HTML file with embedded CSS (<style>).
+- Clean, modern, professional design for mobile and desktop.
+- Fullscreen layout with some top padding.
+- No external libraries or CDNs.
+- Semantic HTML5 only.
+- No comments, no markdown, only raw HTML code.
+
 Website idea: ____
-""".trimIndent(),
+""".trimIndent()
         ),
     )
 }
